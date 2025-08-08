@@ -22,9 +22,11 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-organic-green rounded-full flex items-center justify-center group-hover:bg-organic-green/90 transition-colors duration-300">
-              <Leaf className="w-6 h-6 text-white" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Dhanya Global Logo"
+              className="w-10 h-10 object-contain group-hover:opacity-90 transition-opacity duration-300"
+            />
             <div>
               <span className="text-xl font-bold text-organic-green font-playfair">Dhanya Global</span>
               <div className="text-xs text-earth-brown -mt-1">Organic Excellence</div>
