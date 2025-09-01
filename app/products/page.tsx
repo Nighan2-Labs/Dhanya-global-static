@@ -1,14 +1,29 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Star, MessageCircle, Search, Filter } from "lucide-react"
 import { products } from "@/lib/product-data"
+import Image from "next/image"
+import dynamic from "next/dynamic"
+
+// Dynamically import ProductCard with no SSR
+const ProductCard = dynamic(() => import("@/components/product-card"), {
+  loading: () => (
+    <div className="h-full bg-gray-200 animate-pulse rounded-lg">
+      <div className="h-48 bg-gray-300 rounded-t-lg"></div>
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+        <div className="h-8 bg-gray-300 rounded w-full"></div>
+      </div>
+    </div>
+  ),
+  ssr: false
+})
 
 const categories = [
   "All",
@@ -20,10 +35,29 @@ const categories = [
   "Dry Fruits & Nuts",
 ]
 
-export default function ProductsPage() {
+export default function ProductsPage({
+  searchParams: { category = "all", search = "", sort = "name" } = {}
+}: {
+  searchParams?: {
+    category?: string;
+    search?: string;
+    sort?: string;
+  }
+}) {
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("name")
+  
+  // Initialize from search params
+  useEffect(() => {
+    if (category) {
+      const categoryName = category === "all" ? "All" :
+        categories.find(cat => cat.toLowerCase().replace(/\s+/g, "-") === category) || "All"
+      setSelectedCategory(categoryName)
+    }
+    if (search) setSearchTerm(search)
+    if (sort) setSortBy(sort)
+  }, [category, search, sort])
 
   const filteredProducts = products
     .filter(
@@ -49,10 +83,12 @@ export default function ProductsPage() {
       {/* Hero Section */}
       <section className="relative py-20 bg-organic-green text-white">
         <div className="absolute inset-0 opacity-20">
-          <img
+          <Image
             src="https://image.pollinations.ai/prompt/organic%20products%20collection%20coconut%20oil%20honey%20lentils%20natural?width=1920&height=600"
             alt="Products collection"
+            fill
             className="w-full h-full object-cover"
+            priority
           />
         </div>
         <div className="container mx-auto px-4 relative z-10 text-center">
@@ -125,61 +161,13 @@ export default function ProductsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-white">
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={product.image || "/placeholder.svg"}
-                      alt={product.name}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
-                      {product.badge}
-                    </Badge>
-                    {!product.inStock && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <Badge variant="destructive" className="text-lg px-4 py-2">
-                          Out of Stock
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-
-                  <CardContent className="p-4">
-                    <div className="text-sm text-earth-brown font-medium mb-1">{product.category}</div>
-
-                    <h3 className="font-bold text-organic-green mb-2 group-hover:text-golden-honey transition-colors duration-300 line-clamp-2">
-                      {product.name}
-                    </h3>
-
-                    <p className="text-earth-brown mb-3 text-sm leading-relaxed line-clamp-2">{product.description}</p>
-
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3 h-3 fill-golden-honey text-golden-honey" />
-                        <span className="font-semibold text-organic-green text-sm">{product.rating}</span>
-                      </div>
-                      <span className="text-earth-brown text-xs">({product.reviews})</span>
-                    </div>
-
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-organic-green">{product.price}</span>
-                        <span className="text-earth-brown line-through text-xs">{product.originalPrice}</span>
-                      </div>
-                    </div>
-
-                    <Button
-                      className="w-full bg-organic-green hover:bg-organic-green/90 text-white font-semibold py-2 rounded-full transition-all duration-300 disabled:opacity-50"
-                      disabled={!product.inStock}
-                      onClick={() =>
-                        window.open(`https://wa.me/1234567890?text=Hi! I'm interested in ${product.name}`, "_blank")
-                      }
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      {product.inStock ? "Inquire on WhatsApp" : "Notify When Available"}
-                    </Button>
-                  </CardContent>
-                </Card>
+                <ProductCard
+                  product={product}
+                  showCategory={true}
+                  showWeight={true}
+                  showFeatures={true}
+                  className="h-full"
+                />
               </motion.div>
             ))}
           </div>
@@ -194,3 +182,4 @@ export default function ProductsPage() {
     </div>
   )
 }
+

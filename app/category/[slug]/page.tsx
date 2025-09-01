@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,11 +10,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, MessageCircle, Search, Filter, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { categoryData, products } from "@/lib/product-data"
+import Image from "next/image"
+import dynamic from "next/dynamic"
+
+// Dynamically import ProductCard with no SSR
+const ProductCard = dynamic(() => import("@/components/product-card"), {
+  loading: () => (
+    <div className="h-full bg-gray-200 animate-pulse rounded-lg">
+      <div className="h-48 bg-gray-300 rounded-t-lg"></div>
+      <div className="p-4 space-y-3">
+        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+        <div className="h-8 bg-gray-300 rounded w-full"></div>
+      </div>
+    </div>
+  ),
+  ssr: false
+})
 
 interface CategoryPageProps {
   params: {
     slug: string
   }
+  category?: any
+  categoryProducts: any[]
+  filteredProducts: any[]
+  searchTerm: string
+  sortBy: "name" | "price-low" | "price-high" | "rating" | "popularity"
+  priceRange: "all" | "under-500" | "500-1000" | "over-1000"
 }
 
 // Fix the category slug mapping
@@ -30,13 +53,70 @@ const getCategoryFromSlug = (slug: string) => {
   return slugMappings[slug]
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortBy, setSortBy] = useState("name")
-  const [priceRange, setPriceRange] = useState("all")
-
-  const categoryKey = getCategoryFromSlug(params.slug)
-  const category = categoryKey ? categoryData[categoryKey as keyof typeof categoryData] : null
+export default function CategoryPage({
+  params,
+  searchParams: { search = "", sort = "name", price = "all" } = {}
+}: {
+  params: { slug: string }
+  searchParams?: {
+    search?: string;
+    sort?: string;
+    price?: string;
+  }
+}) {
+  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [sortBy, setSortBy] = useState<"name" | "price-low" | "price-high" | "rating" | "popularity">("name")
+  const [priceRange, setPriceRange] = useState<"all" | "under-500" | "500-1000" | "over-1000">("all")
+  const [category, setCategory] = useState<any>(null)
+  const [categoryProducts, setCategoryProducts] = useState<any[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([])
+  
+  // Initialize from search params and data
+  useEffect(() => {
+    const categoryKey = getCategoryFromSlug(params.slug)
+    const currentCategory = categoryKey ? categoryData[categoryKey as keyof typeof categoryData] : null
+    
+    if (currentCategory) {
+      setCategory(currentCategory)
+      
+      // Filter products by category
+      const categoryProductsList = products.filter((product) => {
+        const productCategorySlug = product.category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")
+        return productCategorySlug === params.slug
+      })
+      
+      setCategoryProducts(categoryProductsList)
+      
+      // Apply filters
+      const filteredProductsList = categoryProductsList
+        .filter(
+          (product) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (priceRange === "all" ||
+              (priceRange === "under-500" && Number.parseInt(product.price.replace("₹", "")) < 500) ||
+              (priceRange === "500-1000" &&
+                Number.parseInt(product.price.replace("₹", "")) >= 500 &&
+                Number.parseInt(product.price.replace("₹", "")) <= 1000) ||
+              (priceRange === "over-1000" && Number.parseInt(product.price.replace("₹", "")) > 1000)),
+        )
+        .sort((a, b) => {
+          switch (sortBy) {
+            case "price-low":
+              return Number.parseInt(a.price.replace("₹", "")) - Number.parseInt(b.price.replace("₹", ""))
+            case "price-high":
+              return Number.parseInt(b.price.replace("₹", "")) - Number.parseInt(a.price.replace("₹", ""))
+            case "rating":
+              return b.rating - a.rating
+            case "popularity":
+              return b.reviews - a.reviews
+            default:
+              return a.name.localeCompare(b.name)
+          }
+        })
+      
+      setFilteredProducts(filteredProductsList)
+    }
+  }, [params.slug, searchTerm, sortBy, priceRange])
 
   if (!category) {
     return (
@@ -52,48 +132,21 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     )
   }
 
-  // Fix the product filtering to match the correct category names
-  const categoryProducts = products.filter((product) => {
-    const productCategorySlug = product.category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")
-    return productCategorySlug === params.slug
-  })
-
-  const filteredProducts = categoryProducts
-    .filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (priceRange === "all" ||
-          (priceRange === "under-500" && Number.parseInt(product.price.replace("₹", "")) < 500) ||
-          (priceRange === "500-1000" &&
-            Number.parseInt(product.price.replace("₹", "")) >= 500 &&
-            Number.parseInt(product.price.replace("₹", "")) <= 1000) ||
-          (priceRange === "over-1000" && Number.parseInt(product.price.replace("₹", "")) > 1000)),
-    )
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return Number.parseInt(a.price.replace("₹", "")) - Number.parseInt(b.price.replace("₹", ""))
-        case "price-high":
-          return Number.parseInt(b.price.replace("₹", "")) - Number.parseInt(a.price.replace("₹", ""))
-        case "rating":
-          return b.rating - a.rating
-        case "popularity":
-          return b.reviews - a.reviews
-        default:
-          return a.name.localeCompare(b.name)
-      }
-    })
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-cream-white to-white">
       {/* Hero Section */}
       <section className="relative py-20 bg-organic-green text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <img
-            src={category.heroImage || "/placeholder.svg"}
-            alt={category.name}
-            className="w-full h-full object-cover"
-          />
+          <div className="relative inset-0 opacity-20">
+            <Image
+              src={category.heroImage || "/placeholder.svg"}
+              alt={category.name}
+              fill
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
@@ -217,7 +270,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 />
               </div>
 
-              <Select value={priceRange} onValueChange={setPriceRange}>
+              <Select value={priceRange} onValueChange={(value: "all" | "under-500" | "500-1000" | "over-1000") => setPriceRange(value)}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Price Range" />
                 </SelectTrigger>
@@ -229,7 +282,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
+              <Select value={sortBy} onValueChange={(value: "name" | "price-low" | "price-high" | "rating" | "popularity") => setSortBy(value)}>
                 <SelectTrigger className="w-48">
                   <Filter className="w-4 h-4 mr-2" />
                   <SelectValue />
@@ -258,13 +311,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-white h-full">
+                <Link href={`/products/${product.name.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")}`}>
+                  <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-white h-full cursor-pointer">
                   <div className="relative overflow-hidden">
-                    <img
-                      src={product.image || "/placeholder.svg"}
-                      alt={product.name}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
+                        src={product.image || "/placeholder.svg"}
+                        alt={product.name}
+                        fill
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
                     <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
                       {product.badge}
                     </Badge>
@@ -346,6 +404,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     </Button>
                   </CardContent>
                 </Card>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -387,11 +446,15 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   <Link href={`/category/${slug}`}>
                     <Card className="group cursor-pointer hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden bg-white">
                       <div className="relative overflow-hidden h-48">
-                        <img
-                          src={cat.image || "/placeholder.svg"}
-                          alt={cat.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
+                        <div className="relative inset-0 h-48 overflow-hidden">
+                          <Image
+                            src={cat.image || "/placeholder.svg"}
+                            alt={cat.name}
+                            fill
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-organic-green/60 to-transparent" />
                         <div className="absolute bottom-4 left-4 text-white">
                           <h3 className="text-xl font-bold mb-1">{cat.name}</h3>
@@ -408,3 +471,4 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     </div>
   )
 }
+

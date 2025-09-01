@@ -1,3 +1,43 @@
+// TypeScript Interfaces
+export interface ProductVariant {
+  id: string
+  name: string
+  price: string
+  originalPrice?: string
+  weight: string
+  inStock: boolean
+  discount?: number
+}
+
+export interface ProductDetail {
+  id: number
+  name: string
+  category: string
+  price: string
+  originalPrice?: string
+  image: string
+  images?: string[]
+  rating: number
+  reviews: number
+  badge?: string
+  description: string
+  detailedDescription?: string
+  inStock: boolean
+  weight: string
+  features: string[]
+  specifications?: Record<string, string>
+  benefits?: string[]
+  variants?: ProductVariant[]
+  discount?: number
+  stockStatus?: "in-stock" | "low-stock" | "out-of-stock"
+  estimatedRestock?: string
+  shippingInfo?: {
+    freeShipping: boolean
+    shippingTime: string
+    returnPolicy: string
+  }
+}
+
 // Category Data
 export const categoryData = {
   "coconut-oil": {
@@ -85,93 +125,93 @@ export const categoryData = {
     ],
   },
   "spices-herbs": {
-    name: "Spices & Herbs",
-    description: "Aromatic organic spices and herbs that bring authentic flavors to your kitchen",
-    detailedDescription:
-      "Our spice collection celebrates India's rich culinary heritage with premium organic spices sourced from their native regions. From Kerala's cardamom hills to Kashmir's saffron fields, each spice is harvested at peak potency and processed using traditional methods to preserve essential oils and flavor compounds.",
-    image:
-      "https://image.pollinations.ai/prompt/organic%20spices%20herbs%20colorful%20natural%20aromatic?width=600&height=400",
-    heroImage:
-      "https://image.pollinations.ai/prompt/spice%20plantation%20organic%20herbs%20natural%20farming%20aromatic?width=1920&height=800",
-    productCount: 25,
-    priceRange: "₹99 - ₹2,499",
-    avgRating: 4.8,
-    highlights: ["Single-Origin", "Sun-Dried", "Aromatic", "Pesticide-Free"],
-    benefits: [
-      "Rich in antioxidants and essential oils",
-      "Natural anti-inflammatory properties",
-      "Supports digestion and metabolism",
-      "Enhances flavor without artificial additives",
-      "Traditional medicinal properties",
-    ],
-    qualityStandards: [
-      "Organic certification from source farms",
-      "Sun-dried to preserve natural oils",
-      "Ground in small batches for freshness",
-      "No artificial colors or preservatives",
-      "Proper storage to maintain potency",
-    ],
-  },
+  name: "Spices & Herbs",
+  description: "Aromatic organic spices and herbs that bring authentic flavors to your kitchen",
+  detailedDescription:
+    "Our spice collection celebrates India's rich culinary heritage with premium organic spices sourced from their native regions. From Kerala's cardamom hills to Kashmir's saffron fields, each spice is harvested at peak potency and processed using traditional methods to preserve essential oils and flavor compounds.",
+  image:
+    "https://image.pollinations.ai/prompt/organic%20spices%20herbs%20colorful%20natural%20aromatic?width=600&height=400",
+  heroImage:
+    "https://image.pollinations.ai/prompt/spice%20plantation%20organic%20herbs%20natural%20farming%20aromatic?width=1920&height=800",
+  productCount: 28,
+  priceRange: "₹99 - ₹2,499",
+  avgRating: 4.8,
+  highlights: ["Single-Origin", "Sun-Dried", "Aromatic", "Pesticide-Free"],
+  benefits: [
+    "Rich in antioxidants and essential oils",
+    "Natural anti-inflammatory properties",
+    "Supports digestion and metabolism",
+    "Enhances flavor without artificial additives",
+    "Traditional medicinal properties",
+  ],
+  qualityStandards: [
+    "Organic certification from source farms",
+    "Sun-dried to preserve natural oils",
+    "Ground in small batches for freshness",
+    "No artificial colors or preservatives",
+    "Proper storage to maintain potency",
+  ],
+},
   "organic-grains": {
-    name: "Organic Grains",
-    description: "Wholesome organic grains and cereals for healthy, nutritious meals",
-    detailedDescription:
-      "Our grain collection features ancient and modern varieties cultivated using sustainable organic farming practices. From traditional millets that sustained our ancestors to heritage rice varieties, each grain is carefully processed to retain maximum nutritional value while ensuring food safety and quality.",
-    image:
-      "https://image.pollinations.ai/prompt/organic%20grains%20cereals%20natural%20wholesome%20healthy?width=600&height=400",
-    heroImage:
-      "https://image.pollinations.ai/prompt/organic%20grain%20fields%20natural%20farming%20sustainable%20agriculture?width=1920&height=800",
-    productCount: 20,
-    priceRange: "₹149 - ₹899",
-    avgRating: 4.6,
-    highlights: ["Ancient Varieties", "Whole Grains", "Gluten-Free Options", "Nutrient-Dense"],
-    benefits: [
-      "High in dietary fiber and complex carbohydrates",
-      "Rich in B-vitamins and essential minerals",
-      "Supports sustained energy release",
-      "Gluten-free options available",
-      "Promotes digestive health",
-    ],
-    qualityStandards: [
-      "Certified organic cultivation",
-      "Minimal processing to retain nutrients",
-      "Regular testing for heavy metals",
-      "Proper cleaning and grading",
-      "Moisture-controlled storage",
-    ],
-  },
+  name: "Organic Grains",
+  description: "Wholesome organic grains and cereals for healthy, nutritious meals",
+  detailedDescription:
+    "Our grain collection features ancient and modern varieties cultivated using sustainable organic farming practices. From traditional millets that sustained our ancestors to heritage rice varieties, each grain is carefully processed to retain maximum nutritional value while ensuring food safety and quality.",
+  image:
+    "https://image.pollinations.ai/prompt/organic%20grains%20cereals%20natural%20wholesome%20healthy?width=600&height=400",
+  heroImage:
+    "https://image.pollinations.ai/prompt/organic%20grain%20fields%20natural%20farming%20sustainable%20agriculture?width=1920&height=800",
+  productCount: 23,
+  priceRange: "₹149 - ₹899",
+  avgRating: 4.6,
+  highlights: ["Ancient Varieties", "Whole Grains", "Gluten-Free Options", "Nutrient-Dense"],
+  benefits: [
+    "High in dietary fiber and complex carbohydrates",
+    "Rich in B-vitamins and essential minerals",
+    "Supports sustained energy release",
+    "Gluten-free options available",
+    "Promotes digestive health",
+  ],
+  qualityStandards: [
+    "Certified organic cultivation",
+    "Minimal processing to retain nutrients",
+    "Regular testing for heavy metals",
+    "Proper cleaning and grading",
+    "Moisture-controlled storage",
+  ],
+},
   "dry-fruits-nuts": {
-    name: "Dry Fruits & Nuts",
-    description: "Premium quality dry fruits and nuts packed with natural goodness",
-    detailedDescription:
-      "Our dry fruits and nuts collection features the finest quality produce from India's premier growing regions. From Kashmir's walnuts to California's almonds, each variety is carefully selected, processed, and packed to preserve freshness and nutritional value. These nutrient-dense snacks are perfect for healthy living.",
-    image:
-      "https://image.pollinations.ai/prompt/premium%20dry%20fruits%20nuts%20natural%20healthy%20organic?width=600&height=400",
-    heroImage:
-      "https://image.pollinations.ai/prompt/dry%20fruits%20nuts%20orchard%20natural%20harvest%20premium?width=1920&height=800",
-    productCount: 22,
-    priceRange: "₹299 - ₹1,999",
-    avgRating: 4.7,
-    highlights: ["Premium Grade", "Natural Processing", "Nutrient-Rich", "Fresh Harvest"],
-    benefits: [
-      "Rich in healthy fats and proteins",
-      "High in vitamins E and B-complex",
-      "Contains essential minerals like magnesium",
-      "Supports heart and brain health",
-      "Natural source of energy",
-    ],
-    qualityStandards: [
-      "Grade A quality selection",
-      "Natural drying without chemicals",
-      "Regular quality checks for freshness",
-      "Proper packaging to prevent rancidity",
-      "Temperature-controlled storage",
-    ],
-  },
+  name: "Dry Fruits & Nuts",
+  description: "Premium quality dry fruits and nuts packed with natural goodness",
+  detailedDescription:
+    "Our dry fruits and nuts collection features the finest quality produce from India's premier growing regions. From Kashmir's walnuts to California's almonds, each variety is carefully selected, processed, and packed to preserve freshness and nutritional value. These nutrient-dense snacks are perfect for healthy living.",
+  image:
+    "https://image.pollinations.ai/prompt/premium%20dry%20fruits%20nuts%20natural%20healthy%20organic?width=600&height=400",
+  heroImage:
+    "https://image.pollinations.ai/prompt/dry%20fruits%20nuts%20orchard%20natural%20harvest%20premium?width=1920&height=800",
+  productCount: 25,
+  priceRange: "₹299 - ₹1,999",
+  avgRating: 4.7,
+  highlights: ["Premium Grade", "Natural Processing", "Nutrient-Rich", "Fresh Harvest"],
+  benefits: [
+    "Rich in healthy fats and proteins",
+    "High in vitamins E and B-complex",
+    "Contains essential minerals like magnesium",
+    "Supports heart and brain health",
+    "Natural source of energy",
+  ],
+  qualityStandards: [
+    "Grade A quality selection",
+    "Natural drying without chemicals",
+    "Regular quality checks for freshness",
+    "Proper packaging to prevent rancidity",
+    "Temperature-controlled storage",
+  ],
+},
 }
 
 // Extended Products Data
-export const products = [
+export const products: ProductDetail[] = [
   // Coconut Oil Products (12 products)
   {
     id: 1,
@@ -181,14 +221,72 @@ export const products = [
     originalPrice: "₹1,199",
     image:
       "https://image.pollinations.ai/prompt/premium%20virgin%20coconut%20oil%20glass%20jar%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/premium%20virgin%20coconut%20oil%20glass%20jar%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20bottle%20natural%20lighting?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20pouring%20golden%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20closeup%20natural%20texture?width=400&height=400",
+      "https://image.pollinations.ai/prompt/virgin%20coconut%20oil%20with%20coconut%20shell%20natural?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 156,
     badge: "Best Seller",
     description: "Cold-pressed virgin coconut oil with natural aroma and taste",
+    detailedDescription: "Our premium virgin coconut oil is cold-pressed within hours of harvesting to retain maximum nutritional value. Rich in lauric acid and medium-chain triglycerides, this oil is perfect for cooking, skincare, and hair care.",
     inStock: true,
     weight: "500ml",
     features: ["Cold-Pressed", "Virgin Quality", "Chemical-Free"],
+    benefits: [
+      "Rich in lauric acid for immune support",
+      "Improves skin hydration and elasticity",
+      "Boosts hair growth and reduces dandruff",
+      "Supports heart health",
+      "High smoke point for various cooking methods"
+    ],
+    variants: [
+      {
+        id: "1-500ml",
+        name: "500ml Bottle",
+        price: "₹899",
+        originalPrice: "₹1,199",
+        weight: "500ml",
+        inStock: true,
+        discount: 25
+      },
+      {
+        id: "1-1l",
+        name: "1L Bottle",
+        price: "₹1,599",
+        originalPrice: "₹1,999",
+        weight: "1L",
+        inStock: true,
+        discount: 20
+      },
+      {
+        id: "1-250ml",
+        name: "250ml Travel",
+        price: "₹499",
+        originalPrice: "₹649",
+        weight: "250ml",
+        inStock: true,
+        discount: 23
+      }
+    ],
     discount: 25,
+    stockStatus: "in-stock",
+    estimatedRestock: undefined,
+    specifications: {
+      "Source": "Organic Coconut Farms",
+      "Processing": "Cold-Pressed",
+      "Purity": "100% Natural",
+      "Shelf Life": "24 months",
+      "Storage": "Cool, dry place away from sunlight"
+    },
+    shippingInfo: {
+      freeShipping: true,
+      shippingTime: "2-3 business days",
+      returnPolicy: "30-day money-back guarantee"
+    }
   },
   {
     id: 2,
@@ -198,6 +296,13 @@ export const products = [
     originalPrice: "₹1,599",
     image:
       "https://image.pollinations.ai/prompt/organic%20extra%20virgin%20coconut%20oil%20premium%20packaging?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20extra%20virgin%20coconut%20oil%20premium%20packaging?width=400&height=400",
+      "https://image.pollinations.ai/prompt/extra%20virgin%20coconut%20oil%20glass%20bottle%20luxury?width=400&height=400",
+      "https://image.pollinations.ai/premium%20coconut%20oil%20cooking%20pan%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20droplets%20fresh%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/organic%20coconut%20farm%20source%20natural?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 89,
     badge: "Premium",
@@ -214,6 +319,13 @@ export const products = [
     originalPrice: "₹999",
     image:
       "https://image.pollinations.ai/prompt/cold%20pressed%20coconut%20oil%20natural%20bottle?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/cold%20pressed%20coconut%20oil%20natural%20bottle?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20cold%20press%20machine?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20wooden%20press%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cold%20pressed%20oil%20golden%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20production%20process?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 134,
     badge: "Popular",
@@ -230,6 +342,13 @@ export const products = [
     originalPrice: "₹849",
     image:
       "https://image.pollinations.ai/prompt/coconut%20oil%20hair%20skin%20care%20natural%20beauty?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/coconut%20oil%20hair%20skin%20care%20natural%20beauty?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20hair%20treatment?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20skin%20moisturizer?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20beauty%20care%20routine?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20spa%20treatment?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 203,
     badge: "Beauty",
@@ -278,6 +397,13 @@ export const products = [
     price: "₹799",
     originalPrice: "₹1,099",
     image: "https://image.pollinations.ai/prompt/coconut%20oil%20with%20herbs%20natural%20infused?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/coconut%20oil%20with%20herbs%20natural%20infused?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20herbal%20mixture%20natural%20ingredients?width=400&height=400",
+      "https://image.pollinations.ai/prompt/herbal%20coconut%20oil%20bottle%20traditional%20medicine?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20pouring%20herbal%20infusion?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20herbs%20closeup%20natural%20texture?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 78,
     badge: "Herbal",
@@ -293,6 +419,13 @@ export const products = [
     price: "₹949",
     originalPrice: "₹1,249",
     image: "https://image.pollinations.ai/prompt/raw%20coconut%20oil%20unrefined%20natural%20pure?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/raw%20coconut%20oil%20unrefined%20natural%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/raw%20coconut%20oil%20coconut%20closeup%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/unrefined%20coconut%20oil%20jar%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20extraction%20raw%20natural%20method?width=400&height=400",
+      "https://image.pollinations.ai/prompt/raw%20coconut%20oil%20texture%20natural%20closeup?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 145,
     badge: "Raw",
@@ -324,6 +457,13 @@ export const products = [
     price: "₹549",
     originalPrice: "₹749",
     image: "https://image.pollinations.ai/prompt/organic%20baby%20coconut%20oil%20gentle%20pure?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20baby%20coconut%20oil%20gentle%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/baby%20coconut%20oil%20gentle%20care%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/organic%20baby%20oil%20bottle%20safe%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20baby%20massage%20gentle?width=400&height=400",
+      "https://image.pollinations.ai/prompt/baby%20care%20coconut%20oil%20natural%20gentle?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 234,
     badge: "Baby Care",
@@ -339,6 +479,13 @@ export const products = [
     price: "₹849",
     originalPrice: "₹1,149",
     image: "https://image.pollinations.ai/prompt/coconut%20oil%20vitamin%20e%20enriched%20premium?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/coconut%20oil%20vitamin%20e%20enriched%20premium?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20vitamin%20e%20capsules%20health?width=400&height=400",
+      "https://image.pollinations.ai/prompt/vitamin%20e%20enriched%20coconut%20oil%20bottle?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20pouring%20vitamin%20e%20drops?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20vitamin%20e%20closeup%20premium?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 98,
     badge: "Enriched",
@@ -355,6 +502,13 @@ export const products = [
     originalPrice: "₹1,499",
     image:
       "https://image.pollinations.ai/prompt/artisanal%20coconut%20oil%20handcrafted%20premium%20quality?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/artisanal%20coconut%20oil%20handcrafted%20premium%20quality?width=400&height=400",
+      "https://image.pollinations.ai/prompt/handcrafted%20coconut%20oil%20traditional%20method?width=400&height=400",
+      "https://image.pollinations.ai/prompt/coconut%20oil%20artisan%20crafting%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/traditional%20coconut%20oil%20making%20artisan?width=400&height=400",
+      "https://image.pollinations.ai/prompt/artisanal%20coconut%20oil%20bottle%20premium?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 56,
     badge: "Artisanal",
@@ -373,6 +527,13 @@ export const products = [
     originalPrice: "₹799",
     image:
       "https://image.pollinations.ai/prompt/raw%20forest%20honey%20glass%20jar%20golden%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/raw%20forest%20honey%20glass%20jar%20golden%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/forest%20honey%20dipper%20wooden%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/raw%20honey%20comb%20beehive%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/golden%20honey%20pouring%20thick?width=400&height=400",
+      "https://image.pollinations.ai/prompt/forest%20bees%20honey%20production?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 203,
     badge: "Best Seller",
@@ -390,6 +551,13 @@ export const products = [
     originalPrice: "₹699",
     image:
       "https://image.pollinations.ai/prompt/wildflower%20honey%20jar%20colorful%20natural%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/wildflower%20honey%20jar%20colorful%20natural%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wildflower%20honey%20flowers%20field?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wildflower%20honey%20bees%20pollen?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wildflower%20honey%20pouring%20golden?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wildflower%20honey%20harvest%20season?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 167,
     badge: "Premium",
@@ -405,6 +573,13 @@ export const products = [
     price: "₹799",
     originalPrice: "₹999",
     image: "https://image.pollinations.ai/prompt/acacia%20honey%20light%20golden%20premium%20jar?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/acacia%20honey%20light%20golden%20premium%20jar?width=400&height=400",
+      "https://image.pollinations.ai/prompt/acacia%20tree%20flowers%20white?width=400&height=400",
+      "https://image.pollinations.ai/prompt/acacia%20honey%20light%20color%20clear?width=400&height=400",
+      "https://image.pollinations.ai/prompt/acacia%20honey%20delicate%20taste?width=400&height=400",
+      "https://image.pollinations.ai/prompt/acacia%20honey%20bee%20keeping?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 92,
     badge: "Rare",
@@ -436,6 +611,13 @@ export const products = [
     price: "₹1,299",
     originalPrice: "₹1,699",
     image: "https://image.pollinations.ai/prompt/manuka%20honey%20premium%20medicinal%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/manuka%20honey%20premium%20medicinal%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/manuka%20honey%20jar%20premium%20mgo%20rating?width=400&height=400",
+      "https://image.pollinations.ai/prompt/manuka%20honey%20bee%20pollen%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/manuka%20honey%20medicinal%20properties%20health?width=400&height=400",
+      "https://image.pollinations.ai/prompt/premium%20manuka%20honey%20closeup%20natural?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 78,
     badge: "Medicinal",
@@ -469,6 +651,13 @@ export const products = [
     originalPrice: "₹599",
     image:
       "https://image.pollinations.ai/prompt/clover%20honey%20mild%20sweet%20natural%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/clover%20honey%20mild%20sweet%20natural%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/clover%20flowers%20field%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/clover%20honey%20jar%20mild%20sweet?width=400&height=400",
+      "https://image.pollinations.ai/prompt/clover%20honey%20pouring%20golden%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/clover%20honey%20bees%20pollination%20natural?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 189,
     badge: "Mild",
@@ -485,6 +674,13 @@ export const products = [
     originalPrice: "₹679",
     image:
       "https://image.pollinations.ai/prompt/sunflower%20honey%20bright%20golden%20natural%20pure?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/sunflower%20honey%20bright%20golden%20natural%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/sunflower%20field%20honey%20harvest%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/sunflower%20honey%20jar%20golden%20color?width=400&height=400",
+      "https://image.pollinations.ai/prompt/sunflower%20honey%20pouring%20bright%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/sunflower%20honey%20closeup%20natural%20texture?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 123,
     badge: "Golden",
@@ -501,6 +697,13 @@ export const products = [
     originalPrice: "₹949",
     image:
       "https://image.pollinations.ai/prompt/lychee%20honey%20exotic%20floral%20premium%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/lychee%20honey%20exotic%20floral%20premium%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lychee%20flowers%20blossom%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lychee%20honey%20jar%20exotic%20floral?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lychee%20honey%20pouring%20golden%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lychee%20honey%20closeup%20exotic%20texture?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 87,
     badge: "Exotic",
@@ -517,6 +720,13 @@ export const products = [
     originalPrice: "₹899",
     image:
       "https://image.pollinations.ai/prompt/jamun%20honey%20dark%20rich%20natural%20medicinal?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/jamun%20honey%20dark%20rich%20natural%20medicinal?width=400&height=400",
+      "https://image.pollinations.ai/prompt/jamun%20flowers%20black%20plum%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/jamun%20honey%20jar%20dark%20rich?width=400&height=400",
+      "https://image.pollinations.ai/prompt/jamun%20honey%20pouring%20dark%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/jamun%20honey%20closeup%20medicinal%20properties?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 145,
     badge: "Dark",
@@ -532,6 +742,13 @@ export const products = [
     price: "₹849",
     originalPrice: "₹1,099",
     image: "https://image.pollinations.ai/prompt/neem%20honey%20medicinal%20natural%20therapeutic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/neem%20honey%20medicinal%20natural%20therapeutic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/neem%20flowers%20medicinal%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/neem%20honey%20jar%20medicinal%20healing?width=400&height=400",
+      "https://image.pollinations.ai/prompt/neem%20honey%20pouring%20therapeutic%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/neem%20honey%20closeup%20natural%20medicinal?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 98,
     badge: "Medicinal",
@@ -547,6 +764,13 @@ export const products = [
     price: "₹649",
     originalPrice: "₹849",
     image: "https://image.pollinations.ai/prompt/tulsi%20honey%20holy%20basil%20natural%20sacred?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/tulsi%20honey%20holy%20basil%20natural%20sacred?width=400&height=400",
+      "https://image.pollinations.ai/prompt/tulsi%20flowers%20holy%20basil%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/tulsi%20honey%20jar%20sacred%20holy?width=400&height=400",
+      "https://image.pollinations.ai/prompt/tulsi%20honey%20pouring%20natural%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/tulsi%20honey%20closeup%20aromatic%20sacred?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 167,
     badge: "Sacred",
@@ -563,6 +787,13 @@ export const products = [
     originalPrice: "₹649",
     image:
       "https://image.pollinations.ai/prompt/mustard%20honey%20yellow%20natural%20organic%20pure?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/mustard%20honey%20yellow%20natural%20organic%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20field%20flowers%20honey%20source?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20honey%20jar%20yellow%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20honey%20pouring%20golden%20liquid?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20honey%20closeup%20regional%20distinctive?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 134,
     badge: "Regional",
@@ -579,6 +810,13 @@ export const products = [
     originalPrice: "₹1,249",
     image:
       "https://image.pollinations.ai/prompt/raw%20honey%20comb%20natural%20wax%20pure%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/raw%20honey%20comb%20natural%20wax%20pure%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20comb%20hexagonal%20cells%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/raw%20honey%20comb%20beeswax%20pure?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20comb%20cutting%20natural%20extract?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20comb%20closeup%20natural%20texture?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 76,
     badge: "Raw Comb",
@@ -596,6 +834,13 @@ export const products = [
     originalPrice: "₹1,599",
     image:
       "https://image.pollinations.ai/prompt/honey%20gift%20set%20variety%20pack%20premium%20collection?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/honey%20gift%20set%20variety%20pack%20premium%20collection?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20gift%20box%20assorted%20varieties%20premium?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20gift%20set%20open%20collection%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20bottles%20gift%20packaging%20luxury?width=400&height=400",
+      "https://image.pollinations.ai/prompt/honey%20gift%20set%20closeup%20premium%20quality?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 89,
     badge: "Gift Set",
@@ -614,6 +859,13 @@ export const products = [
     originalPrice: "₹399",
     image:
       "https://image.pollinations.ai/prompt/organic%20mungbean%20green%20gram%20natural%20packaging?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20mungbean%20green%20gram%20natural%20packaging?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mungbean%20sprouts%20fresh%20green?width=400&height=400",
+      "https://image.pollinations.ai/prompt/green%20gram%20lentils%20bowl?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mungbean%20cooking%20indian%20dish?width=400&height=400",
+      "https://image.pollinations.ai/prompt/organic%20mungbean%20field%20harvest?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 78,
     badge: "Healthy",
@@ -630,6 +882,13 @@ export const products = [
     price: "₹349",
     originalPrice: "₹449",
     image: "https://image.pollinations.ai/prompt/premium%20chickpea%20garbanzo%20beans%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/premium%20chickpea%20garbanzo%20beans%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/chickpea%20curry%20indian%20dish?width=400&height=400",
+      "https://image.pollinations.ai/prompt/garbanzo%20beans%20hummus%20preparation?width=400&height=400",
+      "https://image.pollinations.ai/prompt/chickpea%20salad%20healthy%20bowl?width=400&height=400",
+      "https://image.pollinations.ai/premium%20chickpea%20plant%20field?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 156,
     badge: "Popular",
@@ -646,6 +905,13 @@ export const products = [
     originalPrice: "₹329",
     image:
       "https://image.pollinations.ai/prompt/organic%20masoor%20red%20lentils%20natural%20bowl?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20masoor%20red%20lentils%20natural%20bowl?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20lentils%20masoor%20closeup%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/organic%20masoor%20cooking%20indian%20dish?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20lentils%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/organic%20masoor%20field%20harvest%20natural?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 89,
     badge: "Nutritious",
@@ -662,6 +928,13 @@ export const products = [
     originalPrice: "₹429",
     image:
       "https://image.pollinations.ai/prompt/split%20moongdal%20green%20gram%20organic%20lentils?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/split%20moongdal%20green%20gram%20organic%20lentils?width=400&height=400",
+      "https://image.pollinations.ai/prompt/split%20moongdal%20closeup%20natural%20texture?width=400&height=400",
+      "https://image.pollinations.ai/prompt/moongdal%20cooking%20indian%20curry%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/split%20green%20gram%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/moongdal%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 67,
     badge: "Traditional",
@@ -694,6 +967,13 @@ export const products = [
     price: "₹379",
     originalPrice: "₹479",
     image: "https://image.pollinations.ai/prompt/black%20gram%20urad%20dal%20organic%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/black%20gram%20urad%20dal%20organic%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20gram%20closeup%20urad%20dal%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/urad%20dal%20cooking%20indian%20dish%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20gram%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/urad%20dal%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 123,
     badge: "Premium",
@@ -709,6 +989,13 @@ export const products = [
     price: "₹319",
     originalPrice: "₹419",
     image: "https://image.pollinations.ai/prompt/toor%20dal%20pigeon%20pea%20organic%20yellow?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/toor%20dal%20pigeon%20pea%20organic%20yellow?width=400&height=400",
+      "https://image.pollinations.ai/prompt/toor%20dal%20closeup%20pigeon%20pea%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/toor%20dal%20cooking%20indian%20curry%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/pigeon%20pea%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/toor%20dal%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 178,
     badge: "Staple",
@@ -725,6 +1012,13 @@ export const products = [
     originalPrice: "₹379",
     image:
       "https://image.pollinations.ai/prompt/chana%20dal%20split%20chickpea%20organic%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/chana%20dal%20split%20chickpea%20organic%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/chana%20dal%20closeup%20split%20chickpea%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/chana%20dal%20cooking%20indian%20curry%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/split%20chickpea%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/chana%20dal%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 145,
     badge: "Popular",
@@ -740,6 +1034,13 @@ export const products = [
     price: "₹359",
     originalPrice: "₹459",
     image: "https://image.pollinations.ai/prompt/kidney%20beans%20rajma%20organic%20red%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/kidney%20beans%20rajma%20organic%20red%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/kidney%20beans%20closeup%20rajma%20red%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/rajma%20curry%20indian%20dish%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/kidney%20beans%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/rajma%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.7,
     reviews: 167,
     badge: "Protein Rich",
@@ -755,6 +1056,13 @@ export const products = [
     price: "₹279",
     originalPrice: "₹369",
     image: "https://image.pollinations.ai/prompt/black%20eyed%20peas%20lobia%20organic%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/black%20eyed%20peas%20lobia%20organic%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20eyed%20peas%20closeup%20lobia%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lobia%20curry%20indian%20dish%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20eyed%20peas%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lobia%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.4,
     reviews: 98,
     badge: "Healthy",
@@ -771,6 +1079,13 @@ export const products = [
     originalPrice: "₹339",
     image:
       "https://image.pollinations.ai/prompt/horse%20gram%20kulthi%20organic%20traditional%20pulse?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/horse%20gram%20kulthi%20organic%20traditional%20pulse?width=400&height=400",
+      "https://image.pollinations.ai/prompt/horse%20gram%20closeup%20kulthi%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/horse%20gram%20cooking%20indian%20dish%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/horse%20gram%20bowl%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/horse%20gram%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 76,
     badge: "Traditional",
@@ -786,6 +1101,13 @@ export const products = [
     price: "₹299",
     originalPrice: "₹389",
     image: "https://image.pollinations.ai/prompt/field%20peas%20matar%20organic%20green%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/field%20peas%20matar%20organic%20green%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/field%20peas%20closeup%20matar%20green%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/field%20peas%20cooking%20indian%20curry%20traditional?width=400&height=400",
+      "https://image.pollinations.ai/prompt/field%20peas%20bowl%20fresh%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/field%20peas%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 134,
     badge: "Fresh",
@@ -801,6 +1123,13 @@ export const products = [
     price: "₹389",
     originalPrice: "₹499",
     image: "https://image.pollinations.ai/prompt/lima%20beans%20organic%20large%20white%20premium?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/lima%20beans%20organic%20large%20white%20premium?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lima%20beans%20closeup%20large%20white%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lima%20beans%20cooking%20healthy%20dish%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lima%20beans%20bowl%20creamy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/lima%20beans%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.6,
     reviews: 89,
     badge: "Premium",
@@ -816,6 +1145,13 @@ export const products = [
     price: "₹349",
     originalPrice: "₹449",
     image: "https://image.pollinations.ai/prompt/navy%20beans%20organic%20small%20white%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/navy%20beans%20organic%20small%20white%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/navy%20beans%20closeup%20small%20white%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/navy%20beans%20soup%20cooking%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/navy%20beans%20bowl%20versatile%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/navy%20beans%20field%20harvest%20organic%20natural?width=400&height=400"
+    ],
     rating: 4.5,
     reviews: 112,
     badge: "Versatile",
@@ -887,7 +1223,7 @@ export const products = [
     features: ["Variety Pack", "Gift Box", "Assorted"],
   },
 
-  // Spices & Herbs Products (25 products)
+  // Spices & Herbs Products (28 products)
   {
     id: 46,
     name: "Organic Turmeric Powder",
@@ -896,6 +1232,13 @@ export const products = [
     originalPrice: "₹249",
     image:
       "https://image.pollinations.ai/prompt/organic%20turmeric%20powder%20golden%20spice%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20turmeric%20powder%20golden%20spice%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/fresh%20turmeric%20root%20harvest?width=400&height=400",
+      "https://image.pollinations.ai/prompt/turmeric%20powder%20spice%20jar?width=400&height=400",
+      "https://image.pollinations.ai/prompt/turmeric%20golden%20milk%20drink?width=400&height=400",
+      "https://image.pollinations.ai/prompt/turmeric%20farm%20cultivation?width=400&height=400"
+    ],
     rating: 4.8,
     reviews: 234,
     badge: "Anti-inflammatory",
@@ -906,6 +1249,72 @@ export const products = [
     discount: 20,
   },
   {
+    id: 76,
+    name: "Organic Fenugreek Seeds",
+    category: "Spices & Herbs",
+    price: "₹229",
+    originalPrice: "₹289",
+    image: "https://image.pollinations.ai/prompt/organic%20fenugreek%20seeds%20spice%20natural%20healthy?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20fenugreek%20seeds%20spice%20natural%20healthy?width=400&height=400",
+      "https://image.pollinations.ai/prompt/fenugreek%20seeds%20closeup%20natural%20texture?width=400&height=400",
+      "https://image.pollinations.ai/prompt/fenugreek%20leaves%20herb%20fresh%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/fenugreek%20powder%20spice%20jar%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/fenugreek%20plant%20cultivation%20organic?width=400&height=400"
+    ],
+    rating: 4.6,
+    reviews: 145,
+    badge: "Digestive Health",
+    description: "Organic fenugreek seeds with medicinal properties",
+    inStock: true,
+    weight: "250g",
+    features: ["Medicinal", "Digestive Health", "Organic"],
+  },
+  {
+    id: 77,
+    name: "Organic Mustard Seeds",
+    category: "Spices & Herbs",
+    price: "₹189",
+    originalPrice: "₹239",
+    image: "https://image.pollinations.ai/prompt/organic%20mustard%20seeds%20spice%20natural%20yellow?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20mustard%20seeds%20spice%20natural%20yellow?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20seeds%20closeup%20tiny%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20oil%20cooking%20natural%20healthy?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20seeds%20jar%20spice%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/mustard%20plant%20flowers%20yellow%20natural?width=400&height=400"
+    ],
+    rating: 4.7,
+    reviews: 178,
+    badge: "Flavor Enhancer",
+    description: "Organic yellow mustard seeds for authentic Indian cooking",
+    inStock: true,
+    weight: "200g",
+    features: ["Aromatic", "Flavor Enhancer", "Cooking Essential"],
+  },
+  {
+    id: 78,
+    name: "Organic Asafoetida (Hing)",
+    category: "Spices & Herbs",
+    price: "₹399",
+    originalPrice: "₹499",
+    image: "https://image.pollinations.ai/prompt/organic%20asafoetida%20hing%20spice%20natural%20aromatic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20asafoetida%20hing%20spice%20natural%20aromatic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/asafoetida%20powder%20jar%20spice%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/hing%20spice%20traditional%20indian%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/asafoetida%20resin%20natural%20aromatic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/asafoetida%20cooking%20flavoring%20natural?width=400&height=400"
+    ],
+    rating: 4.8,
+    reviews: 134,
+    badge: "Digestive Aid",
+    description: "Pure organic asafoetida with authentic flavor and aroma",
+    inStock: true,
+    weight: "100g",
+    features: ["Pure", "Aromatic", "Digestive Aid"],
+  },
+  {
     id: 47,
     name: "Cardamom Pods - Green",
     category: "Spices & Herbs",
@@ -913,6 +1322,13 @@ export const products = [
     originalPrice: "₹1,199",
     image:
       "https://image.pollinations.ai/prompt/green%20cardamom%20pods%20organic%20aromatic%20spice?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/green%20cardamom%20pods%20organic%20aromatic%20spice?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cardamom%20plant%20flowers%20green?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cardamom%20pods%20closeup%20aromatic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cardamom%20spice%20market%20kerala?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cardamom%20tea%20flavoring?width=400&height=400"
+    ],
     rating: 4.9,
     reviews: 156,
     badge: "Premium",
@@ -1050,7 +1466,7 @@ export const products = [
     features: ["Dried", "Flavoring", "Natural"],
   },
 
-  // Organic Grains Products (20 products)
+  // Organic Grains Products (23 products)
   {
     id: 56,
     name: "Organic Brown Rice",
@@ -1066,6 +1482,72 @@ export const products = [
     weight: "1kg",
     features: ["Whole Grain", "High Fiber", "Nutritious"],
     discount: 25,
+  },
+  {
+    id: 79,
+    name: "Organic Red Rice",
+    category: "Organic Grains",
+    price: "₹349",
+    originalPrice: "₹449",
+    image: "https://image.pollinations.ai/prompt/organic%20red%20rice%20ancient%20grain%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20red%20rice%20ancient%20grain%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20rice%20closeup%20natural%20texture?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20rice%20cooking%20healthy%20dish?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20rice%20field%20harvest%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/red%20rice%20bowl%20natural%20grain?width=400&height=400"
+    ],
+    rating: 4.7,
+    reviews: 156,
+    badge: "Ancient Grain",
+    description: "Nutritious red rice with iron and zinc content",
+    inStock: true,
+    weight: "1kg",
+    features: ["Ancient Grain", "Iron Rich", "Antioxidant"],
+  },
+  {
+    id: 80,
+    name: "Organic Black Rice",
+    category: "Organic Grains",
+    price: "₹449",
+    originalPrice: "₹599",
+    image: "https://image.pollinations.ai/prompt/organic%20black%20rice%20forbidden%20grain%20natural?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20black%20rice%20forbidden%20grain%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20rice%20closeup%20dark%20grain%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20rice%20cooking%20purple%20dish?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20rice%20field%20harvest%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/black%20rice%20bowl%20natural%20healthy?width=400&height=400"
+    ],
+    rating: 4.8,
+    reviews: 189,
+    badge: "Forbidden Grain",
+    description: "Premium black rice rich in antioxidants and anthocyanins",
+    inStock: true,
+    weight: "1kg",
+    features: ["Antioxidant Rich", "Premium", "Medicinal"],
+  },
+  {
+    id: 81,
+    name: "Organic Wild Rice",
+    category: "Organic Grains",
+    price: "₹599",
+    originalPrice: "₹799",
+    image: "https://image.pollinations.ai/prompt/organic%20wild%20rice%20mixture%20natural%20healthy?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/organic%20wild%20rice%20mixture%20natural%20healthy?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wild%20rice%20closeup%20long%20grain%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wild%20rice%20cooking%20mixture%20blend?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wild%20rice%20field%20harvest%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/wild%20rice%20bowl%20premium%20natural?width=400&height=400"
+    ],
+    rating: 4.9,
+    reviews: 134,
+    badge: "Premium Blend",
+    description: "Premium wild rice blend with rich nutty flavor",
+    inStock: true,
+    weight: "500g",
+    features: ["Nutty Flavor", "Premium", "Protein Rich"],
   },
   {
     id: 57,
@@ -1213,7 +1695,7 @@ export const products = [
     features: ["Stone-Ground", "Whole Grain", "Healthy"],
   },
 
-  // Dry Fruits & Nuts Products (22 products)
+  // Dry Fruits & Nuts Products (25 products)
   {
     id: 66,
     name: "Premium Almonds",
@@ -1230,6 +1712,73 @@ export const products = [
     weight: "500g",
     features: ["Vitamin E", "High Protein", "Premium"],
     discount: 25,
+  },
+  {
+    id: 82,
+    name: "Dried Apricots",
+    category: "Dry Fruits & Nuts",
+    price: "₹549",
+    originalPrice: "₹699",
+    image: "https://image.pollinations.ai/prompt/dried%20apricots%20natural%20sweet%20healthy%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/dried%20apricots%20natural%20sweet%20healthy%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/apricots%20closeup%20natural%20texture?width=400&height=400",
+      "https://image.pollinations.ai/prompt/dried%20apricots%20bowl%20healthy%20snack?width=400&height=400",
+      "https://image.pollinations.ai/prompt/apricot%20fruit%20fresh%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/apricots%20drying%20process%20natural?width=400&height=400"
+    ],
+    rating: 4.6,
+    reviews: 178,
+    badge: "Sweet & Healthy",
+    description: "Sweet and chewy dried apricots rich in vitamin A",
+    inStock: true,
+    weight: "500g",
+    features: ["Vitamin A", "Natural Sweet", "Chewy"],
+  },
+  {
+    id: 83,
+    name: "Dried Cranberries",
+    category: "Dry Fruits & Nuts",
+    price: "₹499",
+    originalPrice: "₹649",
+    image: "https://image.pollinations.ai/prompt/dried%20cranberries%20tart%20natural%20healthy%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/dried%20cranberries%20tart%20natural%20healthy%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cranberries%20closeup%20red%20tart%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/dried%20cranberries%20bowl%20healthy%20snack?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cranberry%20juice%20natural%20healthy?width=400&height=400",
+      "https://image.pollinations.ai/prompt/cranberries%20harvest%20natural%20red?width=400&height=400"
+    ],
+    rating: 4.5,
+    reviews: 145,
+    badge: "Antioxidant Rich",
+    description: "Tart dried cranberries packed with antioxidants",
+    inStock: true,
+    weight: "500g",
+    features: ["Antioxidant", "Tart", "Healthy"],
+  },
+  {
+    id: 84,
+    name: "Dried Blueberries",
+    category: "Dry Fruits & Nuts",
+    price: "₹699",
+    originalPrice: "₹899",
+    image: "https://image.pollinations.ai/prompt/dried%20blueberries%20premium%20natural%20healthy%20organic?width=400&height=400",
+    images: [
+      "https://image.pollinations.ai/prompt/dried%20blueberries%20premium%20natural%20healthy%20organic?width=400&height=400",
+      "https://image.pollinations.ai/prompt/blueberries%20closeup%20natural%20purple%20sweet?width=400&height=400",
+      "https://image.pollinations.ai/prompt/dried%20blueberries%20bowl%20premium%20snack?width=400&height=400",
+      "https://image.pollinations.ai/prompt/blueberry%20muffin%20healthy%20natural?width=400&height=400",
+      "https://image.pollinations.ai/prompt/blueberries%20harvest%20natural%20premium?width=400&height=400"
+    ],
+    rating: 4.7,
+    reviews: 167,
+    badge: "Premium",
+    description: "Premium dried blueberries with natural sweetness",
+    inStock: true,
+    weight: "250g",
+    features: ["Premium", "Antioxidant", "Natural Sweet"],
+    discount: 22,
   },
   {
     id: 67,

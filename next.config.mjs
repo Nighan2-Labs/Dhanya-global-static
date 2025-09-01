@@ -7,7 +7,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    unoptimized: false,
+    domains: ['image.pollinations.ai'],
+    formats: ['image/webp', 'image/avif'],
   },
 }
 

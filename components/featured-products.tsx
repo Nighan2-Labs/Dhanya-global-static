@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, MessageCircle } from "lucide-react"
+import Link from "next/link"
 
 const featuredProducts = [
   {
@@ -74,7 +75,8 @@ export function FeaturedProducts() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-gradient-to-b from-white to-cream-white/30">
+              <Link href={`/products/${product.name.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")}`}>
+                <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-gradient-to-b from-white to-cream-white/30 cursor-pointer">
                 <div className="relative overflow-hidden">
                   <img
                     src={product.image || "/placeholder.svg"}
@@ -124,6 +126,7 @@ export function FeaturedProducts() {
                   </Button>
                 </CardContent>
               </Card>
+              </Link>
             </motion.div>
           ))}
         </div>

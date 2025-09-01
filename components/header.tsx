@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Leaf, MessageCircle } from "lucide-react"
+import CartDrawer from "@/components/cart-drawer"
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -47,8 +48,9 @@ export function Header() {
             ))}
           </nav>
 
-          {/* WhatsApp Button */}
-          <div className="hidden md:block">
+          {/* Cart and WhatsApp Buttons */}
+          <div className="hidden md:flex items-center gap-3">
+            <CartDrawer />
             <Button
               className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
               onClick={() =>
@@ -92,7 +94,11 @@ export function Header() {
                   </Link>
                 ))}
 
-                <div className="pt-6 border-t border-organic-green/10">
+                <div className="pt-6 border-t border-organic-green/10 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-earth-brown">Cart</span>
+                    <CartDrawer />
+                  </div>
                   <Button
                     className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-full transition-all duration-300"
                     onClick={() => {

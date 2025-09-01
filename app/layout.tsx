@@ -5,6 +5,7 @@ import "./globals.css"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { CartProvider } from "@/lib/cart-context"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,10 +32,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <Header />
-        {children}
-        <Footer />
-        <ScrollToTop />
+        <CartProvider>
+          <Header />
+          {children}
+          <Footer />
+          <ScrollToTop />
+        </CartProvider>
       </body>
     </html>
   )
