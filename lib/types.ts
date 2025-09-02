@@ -12,7 +12,7 @@ export interface ProductVariant {
 }
 
 export interface ProductDetail {
-  id: number
+  id: number | string  // Allow both number and string for Firebase compatibility
   name: string
   category: string
   price: string
@@ -79,6 +79,28 @@ export interface CategoryData {
       description?: string
       keywords?: string[]
     }
+  }
+}
+
+// Add a specific type for Firebase categories
+export interface FirebaseCategory {
+  id: string
+  name: string
+  description: string
+  detailedDescription?: string
+  image: string
+  heroImage?: string
+  productCount: number
+  priceRange: string
+  avgRating: number
+  highlights: string[]
+  benefits: string[]
+  qualityStandards: string[]
+  slug: string
+  seo?: {
+    title?: string
+    description?: string
+    keywords?: string[]
   }
 }
 

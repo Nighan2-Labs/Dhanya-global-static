@@ -6,9 +6,10 @@ import { Star, MessageCircle, ShoppingCart } from "lucide-react"
 import Image from "next/image"
 import { useCart } from "@/lib/cart-context"
 import Link from "next/link"
+import { ProductDetail } from "@/lib/types"
 
 interface ProductCardProps {
-  product: any
+  product: ProductDetail
   showCategory?: boolean
   showWeight?: boolean
   showFeatures?: boolean
@@ -48,9 +49,11 @@ export default function ProductCard({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
-          <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
-            {product.badge}
-          </Badge>
+          {product.badge && (
+            <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
+              {product.badge}
+            </Badge>
+          )}
           {!product.inStock && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
               <Badge variant="destructive" className="text-lg px-4 py-2">
@@ -58,7 +61,7 @@ export default function ProductCard({
               </Badge>
             </div>
           )}
-          {product.discount && (
+          {product.discount && product.discount > 0 && (
             <Badge className="absolute top-3 right-3 bg-red-500 text-white font-semibold">
               -{product.discount}%
             </Badge>

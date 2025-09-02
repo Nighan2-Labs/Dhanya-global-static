@@ -7,9 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Star, MessageCircle, ArrowLeft, Heart, Share2, ChevronLeft, ChevronRight, Eye, Clock, Truck, Shield } from "lucide-react"
 import Link from "next/link"
-import { products, categoryData } from "@/lib/product-data"
+import { categoryData } from "@/lib/product-data"
+import { getProducts } from "@/lib/firebase-products"
+import { getCategoryBySlug } from "@/lib/firebase-categories"
 import { useParams } from "next/navigation"
 import Image from "next/image"
+import { ProductDetail as FirebaseProductDetail } from "@/lib/types"
 
 interface ProductVariant {
   id: string
@@ -54,43 +57,60 @@ export default function ProductDetailPage() {
   const params = useParams()
   const slug = params.slug as string
   
-  const [product, setProduct] = useState<ProductDetail | null>(null)
-  const [relatedProducts, setRelatedProducts] = useState<ProductDetail[]>([])
+  const [product, setProduct] = useState<FirebaseProductDetail | null>(null)
+  const [relatedProducts, setRelatedProducts] = useState<FirebaseProductDetail[]>([])
   const [category, setCategory] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
-    // Find the product by slug
-    const foundProduct = products.find(p =>
-      p.name.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "") === slug
-    )
-    
-    if (foundProduct) {
-      setProduct(foundProduct)
-      
-      // Find the category for this product
-      const categoryKey = Object.keys(categoryData).find(key =>
-        (categoryData as any)[key].name === foundProduct.category
-      )
-      setCategory(categoryKey ? (categoryData as any)[categoryKey] : null)
-      
-      // Find related products (same category, different products)
-      const related = products
-        .filter(p => p.category === foundProduct.category && p.id !== foundProduct.id)
-        .slice(0, 4)
-      setRelatedProducts(related)
+    const fetchProduct = async () => {
+      try {
+        setLoading(true)
+        const firebaseProducts = await getProducts()
+        
+        // Find the product by slug
+        const foundProduct = firebaseProducts.find(p =>
+          p.name.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "") === slug
+        )
+        
+        if (foundProduct) {
+          setProduct(foundProduct)
+          
+          // Find the category for this product
+          const categorySlug = foundProduct.category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")
+          const fetchedCategory = await getCategoryBySlug(categorySlug)
+          setCategory(fetchedCategory)
+          
+          // Find related products (same category, different products)
+          const related = firebaseProducts
+            .filter(p => p.category === foundProduct.category && p.id !== foundProduct.id)
+            .slice(0, 4)
+          setRelatedProducts(related)
+        }
+      } catch (err) {
+        console.error("Error fetching product:", err)
+        setError("Failed to load product. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
     }
     
-    setLoading(false)
+    if (slug) {
+      fetchProduct()
+    }
   }, [slug])
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null)
   const [showStockNotification, setShowStockNotification] = useState(false)
   
   // Update selected variant when product changes
   useEffect(() => {
-    if (product) {
-      setSelectedVariant(product.variants?.[0] || null)
+    if (product && product.variants && product.variants.length > 0) {
+      setSelectedVariant(product.variants[0])
+    } else {
+      setSelectedVariant(null)
     }
   }, [product])
 
@@ -100,6 +120,22 @@ export default function ProductDetailPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-organic-green mx-auto mb-4"></div>
           <p className="text-earth-brown text-xl">Loading product...</p>
+        </div>
+      </div>
+    )
+  }
+  
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-cream-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-xl mb-4">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="bg-organic-green hover:bg-organic-green/90 text-white"
+          >
+            Retry
+          </Button>
         </div>
       </div>
     )
@@ -132,6 +168,8 @@ export default function ProductDetailPage() {
         return <Badge className="bg-yellow-500 text-white">Low Stock</Badge>
       case "out-of-stock":
         return <Badge variant="destructive">Out of Stock</Badge>
+      default:
+        return null
     }
   }
 
@@ -207,7 +245,7 @@ export default function ProductDetailPage() {
                 )}
                 
                 {/* Discount Badge */}
-                {product.discount && (
+                {product.discount && product.discount > 0 && (
                   <Badge className="absolute top-4 right-4 bg-red-500 text-white font-semibold text-lg px-4 py-2">
                     -{product.discount}%
                   </Badge>
@@ -342,7 +380,7 @@ export default function ProductDetailPage() {
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="font-medium text-organic-green">{variant.name}</span>
-                            {variant.discount && (
+                            {variant.discount && variant.discount > 0 && (
                               <Badge className="bg-red-500 text-white text-xs">
                                 -{variant.discount}%
                               </Badge>
@@ -498,9 +536,11 @@ export default function ProductDetailPage() {
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
                         </div>
-                        <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
-                          {relatedProduct.badge}
-                        </Badge>
+                        {relatedProduct.badge && (
+                          <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
+                            {relatedProduct.badge}
+                          </Badge>
+                        )}
                         {!relatedProduct.inStock && (
                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                             <Badge variant="destructive" className="text-sm px-3 py-1">

@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { CartProvider } from "@/lib/cart-context"
+import { AdminAuthProvider } from "@/lib/admin-auth-context"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,12 +33,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <CartProvider>
-          <Header />
-          {children}
-          <Footer />
-          <ScrollToTop />
-        </CartProvider>
+        <AdminAuthProvider>
+          <CartProvider>
+            <Header />
+            {children}
+            <Footer />
+            <ScrollToTop />
+          </CartProvider>
+        </AdminAuthProvider>
       </body>
     </html>
   )

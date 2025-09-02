@@ -1,74 +1,129 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-
-const categories = [
-  {
-    id: 1,
-    name: "Coconut Oil",
-    slug: "coconut-oil",
-    description: "Premium virgin and organic coconut oil varieties",
-    image:
-      "https://image.pollinations.ai/prompt/coconut%20oil%20bottles%20organic%20premium%20natural%20lighting?width=600&height=400",
-    productCount: 12,
-    gradient: "from-golden-honey/20 to-golden-honey/5",
-  },
-  {
-    id: 2,
-    name: "Pure Honey",
-    slug: "pure-honey",
-    description: "Raw, unprocessed honey from natural sources",
-    image:
-      "https://image.pollinations.ai/prompt/pure%20honey%20jars%20golden%20natural%20organic%20beehive?width=600&height=400",
-    productCount: 15,
-    gradient: "from-organic-green/20 to-organic-green/5",
-  },
-  {
-    id: 3,
-    name: "Pulses & Lentils",
-    slug: "pulses-lentils",
-    description: "Premium organic pulses and lentils rich in protein",
-    image:
-      "https://image.pollinations.ai/prompt/mixed%20pulses%20variety%20colorful%20organic%20lentils%20natural?width=600&height=400",
-    productCount: 18,
-    gradient: "from-earth-brown/20 to-earth-brown/5",
-  },
-  {
-    id: 4,
-    name: "Spices & Herbs",
-    slug: "spices-herbs",
-    description: "Aromatic organic spices and herbs for authentic flavors",
-    image:
-      "https://image.pollinations.ai/prompt/organic%20spices%20herbs%20colorful%20natural%20aromatic?width=600&height=400",
-    productCount: 25,
-    gradient: "from-golden-honey/20 to-golden-honey/5",
-  },
-  {
-    id: 5,
-    name: "Organic Grains",
-    slug: "organic-grains",
-    description: "Wholesome organic grains and cereals for healthy meals",
-    image:
-      "https://image.pollinations.ai/prompt/organic%20grains%20cereals%20natural%20wholesome%20healthy?width=600&height=400",
-    productCount: 20,
-    gradient: "from-organic-green/20 to-organic-green/5",
-  },
-  {
-    id: 6,
-    name: "Dry Fruits & Nuts",
-    slug: "dry-fruits-nuts",
-    description: "Premium quality dry fruits and nuts packed with goodness",
-    image:
-      "https://image.pollinations.ai/prompt/premium%20dry%20fruits%20nuts%20natural%20healthy%20organic?width=600&height=400",
-    productCount: 22,
-    gradient: "from-earth-brown/20 to-earth-brown/5",
-  },
-]
+import { getCategories } from '@/lib/firebase-categories'
 
 export function ProductCategories() {
+  const [categories, setCategories] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true)
+      const fetchedCategories = await getCategories()
+      setCategories(fetchedCategories)
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      // Fallback to hardcoded data if Firebase fails
+      setCategories([
+        {
+          id: 1,
+          name: "Coconut Oil",
+          slug: "coconut-oil",
+          description: "Premium virgin and organic coconut oil varieties",
+          image:
+            "https://image.pollinations.ai/prompt/coconut%20oil%20bottles%20organic%20premium%20natural%20lighting?width=600&height=400",
+          productCount: 12,
+          gradient: "from-golden-honey/20 to-golden-honey/5",
+        },
+        {
+          id: 2,
+          name: "Pure Honey",
+          slug: "pure-honey",
+          description: "Raw, unprocessed honey from natural sources",
+          image:
+            "https://image.pollinations.ai/prompt/pure%20honey%20jars%20golden%20natural%20organic%20beehive?width=600&height=400",
+          productCount: 15,
+          gradient: "from-organic-green/20 to-organic-green/5",
+        },
+        {
+          id: 3,
+          name: "Pulses & Lentils",
+          slug: "pulses-lentils",
+          description: "Premium organic pulses and lentils rich in protein",
+          image:
+            "https://image.pollinations.ai/prompt/mixed%20pulses%20variety%20colorful%20organic%20lentils%20natural?width=600&height=400",
+          productCount: 18,
+          gradient: "from-earth-brown/20 to-earth-brown/5",
+        },
+        {
+          id: 4,
+          name: "Spices & Herbs",
+          slug: "spices-herbs",
+          description: "Aromatic organic spices and herbs for authentic flavors",
+          image:
+            "https://image.pollinations.ai/prompt/organic%20spices%20herbs%20colorful%20natural%20aromatic?width=600&height=400",
+          productCount: 25,
+          gradient: "from-golden-honey/20 to-golden-honey/5",
+        },
+        {
+          id: 5,
+          name: "Organic Grains",
+          slug: "organic-grains",
+          description: "Wholesome organic grains and cereals for healthy meals",
+          image:
+            "https://image.pollinations.ai/prompt/organic%20grains%20cereals%20natural%20wholesome%20healthy?width=600&height=400",
+          productCount: 20,
+          gradient: "from-organic-green/20 to-organic-green/5",
+        },
+        {
+          id: 6,
+          name: "Dry Fruits & Nuts",
+          slug: "dry-fruits-nuts",
+          description: "Premium quality dry fruits and nuts packed with goodness",
+          image:
+            "https://image.pollinations.ai/prompt/premium%20dry%20fruits%20nuts%20natural%20healthy%20organic?width=600&height=400",
+          productCount: 22,
+          gradient: "from-earth-brown/20 to-earth-brown/5",
+        },
+      ])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Function to determine gradient based on category name
+  const getGradient = (categoryName: string) => {
+    const gradients: Record<string, string> = {
+      "Coconut Oil": "from-golden-honey/20 to-golden-honey/5",
+      "Pure Honey": "from-organic-green/20 to-organic-green/5",
+      "Pulses & Lentils": "from-earth-brown/20 to-earth-brown/5",
+      "Spices & Herbs": "from-golden-honey/20 to-golden-honey/5",
+      "Organic Grains": "from-organic-green/20 to-organic-green/5",
+      "Dry Fruits & Nuts": "from-earth-brown/20 to-earth-brown/5",
+    }
+    
+    return gradients[categoryName] || "from-organic-green/20 to-organic-green/5"
+  }
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-cream-white to-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-organic-green mb-6">Product Categories</h2>
+            <p className="text-earth-brown text-xl max-w-3xl mx-auto leading-relaxed">
+              Loading categories...
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="h-64 bg-gray-200 rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="py-20 bg-gradient-to-b from-cream-white to-white">
       <div className="container mx-auto px-4">
@@ -104,10 +159,10 @@ export function ProductCategories() {
                       className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t ${category.gradient} opacity-0 group-hover:opacity-60 transition-opacity duration-300`}
+                      className={`absolute inset-0 bg-gradient-to-t ${getGradient(category.name)} opacity-0 group-hover:opacity-60 transition-opacity duration-300`}
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 group-hover:bg-white transition-colors duration-300">
-                      <span className="text-organic-green font-semibold text-sm">{category.productCount} products</span>
+                      <span className="text-organic-green font-semibold text-sm">{category.productCount || 0} products</span>
                     </div>
                   </div>
 

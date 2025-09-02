@@ -4,14 +4,16 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Star, MessageCircle, Search, Filter, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { categoryData, products } from "@/lib/product-data"
+import { getProducts } from "@/lib/firebase-products"
+import { getCategoryBySlug } from "@/lib/firebase-categories"
+import { ProductDetail } from "@/lib/types"
 import Image from "next/image"
 import dynamic from "next/dynamic"
+import { Badge } from "@/components/ui/badge"
+import { Star, ArrowLeft, Search, Filter } from "lucide-react"
+import Link from "next/link"
 
 // Dynamically import ProductCard with no SSR
 const ProductCard = dynamic(() => import("@/components/product-card"), {
@@ -40,19 +42,6 @@ interface CategoryPageProps {
   priceRange: "all" | "under-500" | "500-1000" | "over-1000"
 }
 
-// Fix the category slug mapping
-const getCategoryFromSlug = (slug: string) => {
-  const slugMappings: { [key: string]: string } = {
-    "coconut-oil": "coconut-oil",
-    "pure-honey": "pure-honey",
-    "pulses-lentils": "pulses-lentils",
-    "spices-herbs": "spices-herbs",
-    "organic-grains": "organic-grains",
-    "dry-fruits-nuts": "dry-fruits-nuts",
-  }
-  return slugMappings[slug]
-}
-
 export default function CategoryPage({
   params,
   searchParams: { search = "", sort = "name", price = "all" } = {}
@@ -70,52 +59,72 @@ export default function CategoryPage({
   const [category, setCategory] = useState<any>(null)
   const [categoryProducts, setCategoryProducts] = useState<any[]>([])
   const [filteredProducts, setFilteredProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   // Initialize from search params and data
   useEffect(() => {
-    const categoryKey = getCategoryFromSlug(params.slug)
-    const currentCategory = categoryKey ? categoryData[categoryKey as keyof typeof categoryData] : null
-    
-    if (currentCategory) {
-      setCategory(currentCategory)
-      
-      // Filter products by category
-      const categoryProductsList = products.filter((product) => {
-        const productCategorySlug = product.category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")
-        return productCategorySlug === params.slug
-      })
-      
-      setCategoryProducts(categoryProductsList)
-      
-      // Apply filters
-      const filteredProductsList = categoryProductsList
-        .filter(
-          (product) =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (priceRange === "all" ||
-              (priceRange === "under-500" && Number.parseInt(product.price.replace("₹", "")) < 500) ||
-              (priceRange === "500-1000" &&
-                Number.parseInt(product.price.replace("₹", "")) >= 500 &&
-                Number.parseInt(product.price.replace("₹", "")) <= 1000) ||
-              (priceRange === "over-1000" && Number.parseInt(product.price.replace("₹", "")) > 1000)),
-        )
-        .sort((a, b) => {
-          switch (sortBy) {
-            case "price-low":
-              return Number.parseInt(a.price.replace("₹", "")) - Number.parseInt(b.price.replace("₹", ""))
-            case "price-high":
-              return Number.parseInt(b.price.replace("₹", "")) - Number.parseInt(a.price.replace("₹", ""))
-            case "rating":
-              return b.rating - a.rating
-            case "popularity":
-              return b.reviews - a.reviews
-            default:
-              return a.name.localeCompare(b.name)
-          }
+    const fetchCategoryAndProducts = async () => {
+      try {
+        setLoading(true)
+        // Fetch category from Firebase
+        const fetchedCategory = await getCategoryBySlug(params.slug)
+        
+        if (fetchedCategory) {
+          setCategory(fetchedCategory)
+        } else {
+          setError("Category not found")
+          return
+        }
+        
+        // Fetch products from Firebase
+        const firebaseProducts = await getProducts()
+        
+        // Filter products by category
+        const categoryProductsList = firebaseProducts.filter((product) => {
+          const productCategorySlug = product.category.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")
+          return productCategorySlug === params.slug
         })
-      
-      setFilteredProducts(filteredProductsList)
+        
+        setCategoryProducts(categoryProductsList)
+        
+        // Apply filters
+        const filteredProductsList = categoryProductsList
+          .filter(
+            (product) =>
+              product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+              (priceRange === "all" ||
+                (priceRange === "under-500" && Number.parseInt(product.price.replace("₹", "").replace(/,/g, "")) < 500) ||
+                (priceRange === "500-1000" &&
+                  Number.parseInt(product.price.replace("₹", "").replace(/,/g, "")) >= 500 &&
+                  Number.parseInt(product.price.replace("₹", "").replace(/,/g, "")) <= 1000) ||
+                (priceRange === "over-1000" && Number.parseInt(product.price.replace("₹", "").replace(/,/g, "")) > 1000)),
+          )
+          .sort((a, b) => {
+            switch (sortBy) {
+              case "price-low":
+                return Number.parseInt(a.price.replace("₹", "").replace(/,/g, "")) - Number.parseInt(b.price.replace("₹", "").replace(/,/g, ""))
+              case "price-high":
+                return Number.parseInt(b.price.replace("₹", "").replace(/,/g, "")) - Number.parseInt(a.price.replace("₹", "").replace(/,/g, ""))
+              case "rating":
+                return b.rating - a.rating
+              case "popularity":
+                return (b.reviews || 0) - (a.reviews || 0)
+              default:
+                return a.name.localeCompare(b.name)
+            }
+          })
+        
+        setFilteredProducts(filteredProductsList)
+      } catch (err) {
+        console.error("Error fetching category and products:", err)
+        setError("Failed to load category and products. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
     }
+    
+    fetchCategoryAndProducts()
   }, [params.slug, searchTerm, sortBy, priceRange])
 
   if (!category) {
@@ -132,6 +141,32 @@ export default function CategoryPage({
     )
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-cream-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-organic-green mx-auto"></div>
+          <p className="mt-4 text-organic-green">Loading products...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-cream-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-xl mb-4">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="bg-organic-green hover:bg-organic-green/90 text-white"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-cream-white to-white">
@@ -311,100 +346,13 @@ export default function CategoryPage({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Link href={`/products/${product.name.toLowerCase().replace(/\s+/g, "-").replace(/&/g, "")}`}>
-                  <Card className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden bg-white h-full cursor-pointer">
-                  <div className="relative overflow-hidden">
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={product.image || "/placeholder.svg"}
-                        alt={product.name}
-                        fill
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                    </div>
-                    <Badge className="absolute top-3 left-3 bg-golden-honey text-organic-green font-semibold">
-                      {product.badge}
-                    </Badge>
-                    {!product.inStock && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <Badge variant="destructive" className="text-lg px-4 py-2">
-                          Out of Stock
-                        </Badge>
-                      </div>
-                    )}
-                    {product.discount && (
-                      <Badge className="absolute top-3 right-3 bg-red-500 text-white font-semibold">
-                        -{product.discount}%
-                      </Badge>
-                    )}
-                  </div>
-
-                  <CardContent className="p-4 flex flex-col h-full">
-                    <div className="flex-grow">
-                      <h3 className="font-bold text-organic-green mb-2 group-hover:text-golden-honey transition-colors duration-300 line-clamp-2">
-                        {product.name}
-                      </h3>
-
-                      <p className="text-earth-brown mb-3 text-sm leading-relaxed line-clamp-2">
-                        {product.description}
-                      </p>
-
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-3 h-3 fill-golden-honey text-golden-honey" />
-                          <span className="font-semibold text-organic-green text-sm">{product.rating}</span>
-                        </div>
-                        <span className="text-earth-brown text-xs">({product.reviews} reviews)</span>
-                      </div>
-
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold text-organic-green">{product.price}</span>
-                          {product.originalPrice && (
-                            <span className="text-earth-brown line-through text-xs">{product.originalPrice}</span>
-                          )}
-                        </div>
-                        {product.weight && (
-                          <span className="text-xs text-earth-brown bg-cream-white px-2 py-1 rounded">
-                            {product.weight}
-                          </span>
-                        )}
-                      </div>
-
-                      {product.features && (
-                        <div className="mb-4">
-                          <div className="flex flex-wrap gap-1">
-                            {product.features.slice(0, 2).map((feature, idx) => (
-                              <Badge
-                                key={idx}
-                                variant="outline"
-                                className="text-xs border-organic-green/30 text-organic-green"
-                              >
-                                {feature}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <Button
-                      className="w-full bg-organic-green hover:bg-organic-green/90 text-white font-semibold py-2 rounded-full transition-all duration-300 disabled:opacity-50 mt-auto"
-                      disabled={!product.inStock}
-                      onClick={() =>
-                        window.open(
-                          `https://wa.me/919876543210?text=Hi! I'm interested in ${product.name} from your ${category.name} collection.`,
-                          "_blank",
-                        )
-                      }
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      {product.inStock ? "Inquire on WhatsApp" : "Notify When Available"}
-                    </Button>
-                  </CardContent>
-                </Card>
-                </Link>
+                <ProductCard
+                  product={product}
+                  showCategory={false}
+                  showWeight={true}
+                  showFeatures={true}
+                  className="h-full"
+                />
               </motion.div>
             ))}
           </div>
@@ -471,4 +419,3 @@ export default function CategoryPage({
     </div>
   )
 }
-

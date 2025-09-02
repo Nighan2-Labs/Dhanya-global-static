@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Star, MessageCircle, Search, Filter } from "lucide-react"
-import { products } from "@/lib/product-data"
+import { getProducts } from "@/lib/firebase-products"
+import { ProductDetail } from "@/lib/types"
 import Image from "next/image"
 import dynamic from "next/dynamic"
 
@@ -47,6 +48,9 @@ export default function ProductsPage({
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("name")
+  const [products, setProducts] = useState<ProductDetail[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
   // Initialize from search params
   useEffect(() => {
@@ -58,6 +62,24 @@ export default function ProductsPage({
     if (search) setSearchTerm(search)
     if (sort) setSortBy(sort)
   }, [category, search, sort])
+
+  // Fetch products from Firebase
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const firebaseProducts = await getProducts()
+        setProducts(firebaseProducts)
+      } catch (err) {
+        console.error("Error fetching products:", err)
+        setError("Failed to load products. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const filteredProducts = products
     .filter(
@@ -77,6 +99,33 @@ export default function ProductsPage({
           return a.name.localeCompare(b.name)
       }
     })
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-cream-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-organic-green mx-auto"></div>
+          <p className="mt-4 text-organic-green">Loading products...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-cream-white to-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-xl mb-4">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="bg-organic-green hover:bg-organic-green/90 text-white"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-cream-white to-white">
@@ -182,4 +231,3 @@ export default function ProductsPage({
     </div>
   )
 }
-

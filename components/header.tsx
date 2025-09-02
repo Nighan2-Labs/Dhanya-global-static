@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Leaf, MessageCircle } from "lucide-react"
+import { Menu, Leaf, MessageCircle, Shield } from "lucide-react"
 import CartDrawer from "@/components/cart-drawer"
 
 const navigation = [
@@ -46,6 +46,15 @@ export function Header() {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-golden-honey group-hover:w-full transition-all duration-300" />
               </Link>
             ))}
+            
+            {/* Admin Portal Link */}
+            <Link
+              href="/admin/login"
+              className="text-organic-green hover:text-golden-honey font-medium transition-colors duration-300 relative group flex items-center"
+            >
+              <Shield className="w-4 h-4 mr-1" />
+              Admin
+            </Link>
           </nav>
 
           {/* Cart and WhatsApp Buttons */}
@@ -93,6 +102,16 @@ export function Header() {
                     {item.name}
                   </Link>
                 ))}
+
+                {/* Admin Portal Link */}
+                <Link
+                  href="/admin/login"
+                  onClick={() => setIsOpen(false)}
+                  className="text-organic-green hover:text-golden-honey font-medium text-lg transition-colors duration-300 flex items-center"
+                >
+                  <Shield className="w-5 h-5 mr-2" />
+                  Admin Portal
+                </Link>
 
                 <div className="pt-6 border-t border-organic-green/10 space-y-3">
                   <div className="flex justify-between items-center">
