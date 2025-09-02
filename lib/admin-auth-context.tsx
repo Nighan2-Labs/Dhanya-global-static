@@ -1,11 +1,12 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface AdminAuthContextType {
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<boolean>
-  logout: () => void
+  logout: (redirectTo?: string) => void
   user: { email: string } | null
 }
 
@@ -40,11 +41,16 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     return false
   }
 
-  const logout = () => {
+  const logout = (redirectTo?: string) => {
     localStorage.removeItem('admin-token')
     localStorage.removeItem('admin-user')
     setIsAuthenticated(false)
     setUser(null)
+    
+    // If redirectTo is provided, redirect after logout
+    if (redirectTo && typeof window !== 'undefined') {
+      window.location.href = redirectTo
+    }
   }
 
   const value = {

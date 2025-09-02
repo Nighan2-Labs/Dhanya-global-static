@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { ProductDetail, ProductVariant } from '@/lib/types'
+import { getCategories } from '@/lib/firebase-categories'
 
 interface ProductFormProps {
   product?: ProductDetail | null
@@ -16,20 +17,11 @@ interface ProductFormProps {
   onCancel: () => void
 }
 
-const categories = [
-  { id: "coconut-oil", name: "Coconut Oil" },
-  { id: "pure-honey", name: "Pure Honey" },
-  { id: "pulses-lentils", name: "Pulses & Lentils" },
-  { id: "spices-herbs", name: "Spices & Herbs" },
-  { id: "organic-grains", name: "Organic Grains" },
-  { id: "dry-fruits-nuts", name: "Dry Fruits & Nuts" }
-]
-
 export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
   const { toast } = useToast()
   const [name, setName] = useState(product?.name || '')
   const [description, setDescription] = useState(product?.description || '')
-  const [category, setCategory] = useState(product?.category || categories[0].name)
+  const [category, setCategory] = useState(product?.category || '')
   // Fix price state to properly handle ₹ symbol
   const [price, setPrice] = useState(product?.price ? product.price.replace('₹', '').replace(',', '') : '')
   const [originalPrice, setOriginalPrice] = useState(product?.originalPrice ? product.originalPrice.replace('₹', '').replace(',', '') : '')
@@ -40,6 +32,33 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [approvedImages, setApprovedImages] = useState<string[]>(product?.images || [])
   const [isSaving, setIsSaving] = useState(false)
+
+  // Categories from Firebase
+  const [availableCategories, setAvailableCategories] = useState<{ id: string; name: string; slug: string }[]>([])
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      setIsLoadingCategories(true)
+      try {
+        const list = await getCategories()
+        setAvailableCategories(list)
+        if (!product && !category && list.length > 0) {
+          setCategory(list[0].name)
+        }
+      } catch (error) {
+        // If fetching fails, keep categories empty and notify
+        toast({
+          title: 'Failed to load categories',
+          description: 'Please add categories first in Admin > Categories.',
+        })
+      } finally {
+        setIsLoadingCategories(false)
+      }
+    }
+
+    loadCategories()
+  }, [product, category, toast])
 
   // Initialize variants if creating new product
   useEffect(() => {
@@ -202,12 +221,12 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select value={category} onValueChange={setCategory}>
+                <Select value={category} onValueChange={setCategory} disabled={isLoadingCategories || availableCategories.length === 0}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder={isLoadingCategories ? 'Loading categories...' : (availableCategories.length === 0 ? 'No categories found' : 'Select category')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((cat) => (
+                    {availableCategories.map((cat) => (
                       <SelectItem key={cat.id} value={cat.name}>
                         {cat.name}
                       </SelectItem>

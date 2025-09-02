@@ -2,9 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
 import "./globals.css"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { ScrollToTop } from "@/components/scroll-to-top"
+import { LayoutWrapper } from "@/components/layout-wrapper"
 import { CartProvider } from "@/lib/cart-context"
 import { AdminAuthProvider } from "@/lib/admin-auth-context"
 
@@ -35,10 +33,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <AdminAuthProvider>
           <CartProvider>
-            <Header />
-            {children}
-            <Footer />
-            <ScrollToTop />
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
           </CartProvider>
         </AdminAuthProvider>
       </body>
