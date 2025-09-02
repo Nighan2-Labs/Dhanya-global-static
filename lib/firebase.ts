@@ -9,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCS1owZWbZ5Cwi19DOMjK14roayuP8_bGQ",
   authDomain: "dhanyaglobal-908fb.firebaseapp.com",
   projectId: "dhanyaglobal-908fb",
-  storageBucket: "dhanyaglobal-908fb.firebasestorage.app",
+  storageBucket: "dhanyaglobal-908fb.appspot.com",
   messagingSenderId: "759832478854",
   appId: "1:759832478854:web:79fc7da84b17293975bd07",
   measurementId: "G-RRNTEGTB97"

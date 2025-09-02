@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Table, 
   TableBody, 
@@ -24,6 +24,7 @@ import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 import { getCategories, deleteCategory } from '@/lib/firebase-categories'
 import { CategoryData } from '@/lib/types'
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 
 export default function AdminCategories() {
   const { toast } = useToast()
@@ -31,6 +32,10 @@ export default function AdminCategories() {
   const [filteredCategories, setFilteredCategories] = useState<(CategoryData[string] & { id: string, slug: string })[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [sortBy, setSortBy] = useState<'name' | 'products' | 'rating'>('name')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
   useEffect(() => {
     fetchCategories()
@@ -47,7 +52,30 @@ export default function AdminCategories() {
     } else {
       setFilteredCategories(categories)
     }
+    setCurrentPage(1)
   }, [searchTerm, categories])
+
+  // Sort derived list
+  const sortedCategories = [...filteredCategories].sort((a, b) => {
+    let cmp = 0
+    if (sortBy === 'name') {
+      cmp = a.name.localeCompare(b.name)
+    } else if (sortBy === 'products') {
+      const av = a.productCount || 0
+      const bv = b.productCount || 0
+      cmp = av - bv
+    } else if (sortBy === 'rating') {
+      const av = a.avgRating || 0
+      const bv = b.avgRating || 0
+      cmp = av - bv
+    }
+    return sortOrder === 'asc' ? cmp : -cmp
+  })
+
+  const totalPages = Math.max(1, Math.ceil(sortedCategories.length / pageSize))
+  const pageStart = (currentPage - 1) * pageSize
+  const pageEnd = pageStart + pageSize
+  const pagedCategories = sortedCategories.slice(pageStart, pageEnd)
 
   const fetchCategories = async () => {
     try {
@@ -111,7 +139,7 @@ export default function AdminCategories() {
           <CardDescription>View and manage all your categories</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -121,6 +149,37 @@ export default function AdminCategories() {
                 className="pl-8"
               />
             </div>
+            <div className="flex items-center gap-2">
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="products">Products</SelectItem>
+                  <SelectItem value="rating">Rating</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as any)}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Order" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="asc">Ascending</SelectItem>
+                  <SelectItem value="desc">Descending</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(parseInt(v)); setCurrentPage(1) }}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Page size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5 / page</SelectItem>
+                  <SelectItem value="10">10 / page</SelectItem>
+                  <SelectItem value="20">20 / page</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <Table>
@@ -128,34 +187,23 @@ export default function AdminCategories() {
               <TableRow>
                 <TableHead>Category</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Products</TableHead>
                 <TableHead>Rating</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredCategories.map((category) => (
+              {pagedCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        className="h-10 w-10 rounded-md object-cover"
-                      />
-                      <div>
-                        <div className="font-medium">{category.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {category.slug}
-                        </div>
+                    <div>
+                      <div className="font-medium">{category.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {category.slug}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="line-clamp-2">{category.description}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{category.productCount || 0} products</Badge>
                   </TableCell>
                   <TableCell>
                     <div className="font-medium">{category.avgRating || 0}</div>
@@ -197,6 +245,24 @@ export default function AdminCategories() {
                   Add your first category
                 </Button>
               </Link>
+            </div>
+          )}
+
+          {filteredCategories.length > 0 && (
+            <div className="mt-6">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.max(1, p - 1)) }} />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <span className="px-3 py-2 text-sm text-muted-foreground">Page {currentPage} of {totalPages}</span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setCurrentPage(p => Math.min(totalPages, p + 1)) }} />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
         </CardContent>

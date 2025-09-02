@@ -21,8 +21,7 @@ export function CategoryForm({ category, onSubmit, onCancel }: CategoryFormProps
   const [description, setDescription] = useState(category?.description || '')
   const [detailedDescription, setDetailedDescription] = useState(category?.detailedDescription || '')
   const [slug, setSlug] = useState(category?.slug || '')
-  const [image, setImage] = useState(category?.image || '')
-  const [heroImage, setHeroImage] = useState(category?.heroImage || '')
+  const [image] = useState(category?.image || '')
   const [priceRange, setPriceRange] = useState(category?.priceRange || '')
   const [avgRating, setAvgRating] = useState(category?.avgRating?.toString() || '')
   const [highlights, setHighlights] = useState(category?.highlights?.join(', ') || '')
@@ -62,7 +61,6 @@ export function CategoryForm({ category, onSubmit, onCancel }: CategoryFormProps
       detailedDescription,
       slug,
       image,
-      heroImage,
       productCount: category?.productCount || 0,
       priceRange,
       avgRating: parseFloat(avgRating) || 0,
@@ -129,37 +127,7 @@ export function CategoryForm({ category, onSubmit, onCancel }: CategoryFormProps
               />
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="image">Category Image URL</Label>
-                <Input
-                  id="image"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  placeholder="Enter image URL"
-                />
-                {image && (
-                  <div className="mt-2">
-                    <img src={image} alt="Category preview" className="w-32 h-32 object-cover rounded" />
-                  </div>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="heroImage">Hero Image URL</Label>
-                <Input
-                  id="heroImage"
-                  value={heroImage}
-                  onChange={(e) => setHeroImage(e.target.value)}
-                  placeholder="Enter hero image URL"
-                />
-                {heroImage && (
-                  <div className="mt-2">
-                    <img src={heroImage} alt="Hero preview" className="w-32 h-32 object-cover rounded" />
-                  </div>
-                )}
-              </div>
-            </div>
+            {/* Category Image URL removed as requested */}
 
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">

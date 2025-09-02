@@ -14,7 +14,7 @@ import {
   QueryDocumentSnapshot,
   DocumentData
 } from 'firebase/firestore'
-import { ref, uploadString, getDownloadURL } from 'firebase/storage'
+import { ref, uploadString, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from './firebase'
 import { ProductDetail } from './types'
 
@@ -110,6 +110,19 @@ export async function uploadImage(imageData: string, fileName: string): Promise<
     return downloadURL
   } catch (error) {
     console.error('Error uploading image: ', error)
+    throw new Error('Failed to upload image')
+  }
+}
+
+// Upload a raw File object to Firebase Storage
+export async function uploadFile(file: File, fileName: string): Promise<string> {
+  try {
+    const storageRef = ref(storage, `products/${fileName}`)
+    await uploadBytes(storageRef, file)
+    const downloadURL = await getDownloadURL(storageRef)
+    return downloadURL
+  } catch (error) {
+    console.error('Error uploading file: ', error)
     throw new Error('Failed to upload image')
   }
 }

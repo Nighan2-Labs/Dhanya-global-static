@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { ProductDetail, ProductVariant } from '@/lib/types'
 import { getCategories } from '@/lib/firebase-categories'
+import { uploadImage, uploadFile } from '@/lib/firebase-products'
 
 interface ProductFormProps {
   product?: ProductDetail | null
@@ -32,6 +33,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [approvedImages, setApprovedImages] = useState<string[]>(product?.images || [])
   const [isSaving, setIsSaving] = useState(false)
+  const [isUploadingImages, setIsUploadingImages] = useState(false)
 
   // Categories from Firebase
   const [availableCategories, setAvailableCategories] = useState<{ id: string; name: string; slug: string }[]>([])
@@ -146,6 +148,47 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
 
   const removeApprovedImage = (imageUrl: string) => {
     setApprovedImages(approvedImages.filter(url => url !== imageUrl))
+  }
+
+  const handleLocalImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setIsUploadingImages(true)
+    try {
+      const uploadedUrls: string[] = []
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const timestamp = Date.now()
+        const safeName = name ? name.replace(/\s+/g, '-').toLowerCase() : 'product'
+        const extFromName = (file.name && file.name.includes('.')) ? file.name.split('.').pop()?.toLowerCase() : undefined
+        const extension = extFromName || (file.type.split('/')[1] || 'jpg')
+        const fileName = `${safeName}-${timestamp}-${i}.${extension}`
+        const url = await uploadFile(file, fileName)
+        uploadedUrls.push(url)
+      }
+
+      // Merge without duplicates
+      const merged = Array.from(new Set([...
+        approvedImages,
+        ...uploadedUrls
+      ]))
+      setApprovedImages(merged)
+      toast({
+        title: 'Images uploaded',
+        description: `${uploadedUrls.length} image(s) added to product.`
+      })
+    } catch (error) {
+      console.error('Image upload failed:', error)
+      toast({
+        title: 'Upload failed',
+        description: 'Could not upload one or more images. Check your internet and Firebase Storage rules.',
+        variant: 'destructive'
+      })
+    } finally {
+      setIsUploadingImages(false)
+      // Do not touch the synthetic event after awaits; let the browser keep the file selection
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -385,6 +428,20 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               >
                 {isGeneratingImages ? 'Generating...' : 'Generate AI Images'}
               </Button>
+              <div>
+                <Label htmlFor="productImages" className="sr-only">Upload Images</Label>
+                <Input
+                  id="productImages"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleLocalImageUpload}
+                  disabled={isUploadingImages}
+                />
+                {isUploadingImages && (
+                  <p className="text-sm text-gray-500 mt-1">Uploading...</p>
+                )}
+              </div>
               
               <p className="text-sm text-gray-500 flex-1">
                 Click to generate product images using AI. You'll be able to preview and approve the images before saving.
