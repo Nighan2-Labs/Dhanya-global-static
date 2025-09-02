@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Star, MessageCircle, Search, Filter } from "lucide-react"
 import { getProducts } from "@/lib/firebase-products"
+import { getCategories } from "@/lib/firebase-categories"
 import { ProductDetail } from "@/lib/types"
 import Image from "next/image"
 import dynamic from "next/dynamic"
@@ -26,15 +27,7 @@ const ProductCard = dynamic(() => import("@/components/product-card"), {
   ssr: false
 })
 
-const categories = [
-  "All",
-  "Coconut Oil",
-  "Pure Honey",
-  "Pulses & Lentils",
-  "Spices & Herbs",
-  "Organic Grains",
-  "Dry Fruits & Nuts",
-]
+// Categories will be fetched from Firebase. Start with just "All".
 
 export default function ProductsPage({
   searchParams: { category = "all", search = "", sort = "name" } = {}
@@ -51,17 +44,33 @@ export default function ProductsPage({
   const [products, setProducts] = useState<ProductDetail[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(["All"])
   
   // Initialize from search params
   useEffect(() => {
     if (category) {
       const categoryName = category === "all" ? "All" :
-        categories.find(cat => cat.toLowerCase().replace(/\s+/g, "-") === category) || "All"
+        categoryOptions.find(cat => cat.toLowerCase().replace(/\s+/g, "-") === category) || "All"
       setSelectedCategory(categoryName)
     }
     if (search) setSearchTerm(search)
     if (sort) setSortBy(sort)
-  }, [category, search, sort])
+  }, [category, search, sort, categoryOptions])
+
+  // Fetch categories from Firebase
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const fetched = await getCategories()
+        const names = fetched.map(c => c.name).filter(Boolean)
+        setCategoryOptions(["All", ...names])
+      } catch (err) {
+        // If categories fail to load, keep only "All"
+        console.error("Error fetching categories:", err)
+      }
+    }
+    fetchCategories()
+  }, [])
 
   // Fetch products from Firebase
   useEffect(() => {
@@ -155,7 +164,7 @@ export default function ProductsPage({
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
+              {categoryOptions.map((category) => (
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}

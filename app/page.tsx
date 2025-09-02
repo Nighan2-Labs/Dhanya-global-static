@@ -1,6 +1,5 @@
 import { Hero } from "@/components/hero"
 import { FeaturedProducts } from "@/components/featured-products"
-import { ProductCategories } from "@/components/product-categories"
 import { AboutPreview } from "@/components/about-preview"
 import { TrustIndicators } from "@/components/trust-indicators"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
@@ -11,7 +10,6 @@ export default function HomePage() {
       <Hero />
       <TrustIndicators />
       <FeaturedProducts />
-      <ProductCategories />
       <AboutPreview />
       <WhatsAppFloat />
     </main>
