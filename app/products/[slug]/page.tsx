@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Star, MessageCircle, ArrowLeft, Heart, Share2, ChevronLeft, ChevronRight, Eye, Clock, Truck, Shield } from "lucide-react"
+import { MessageCircle, ArrowLeft, Heart, Share2, ChevronLeft, ChevronRight, Eye, Clock, Truck, Shield } from "lucide-react"
 import Link from "next/link"
 import { categoryData } from "@/lib/product-data"
 import { getProducts } from "@/lib/firebase-products"
@@ -318,23 +318,7 @@ export default function ProductDetailPage() {
                 
                 <h1 className="text-4xl font-bold text-organic-green mb-4">{product.name}</h1>
                 
-                {/* Enhanced Rating */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < Math.floor(product.rating)
-                            ? "fill-golden-honey text-golden-honey"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="font-semibold text-organic-green text-lg">{product.rating}</span>
-                  <span className="text-earth-brown">({product.reviews} reviews)</span>
-                </div>
+
 
                 {/* Enhanced Description */}
                 <div className="space-y-4 mb-6">
@@ -496,13 +480,7 @@ export default function ProductDetailPage() {
                   <Card className="p-6 bg-gradient-to-r from-organic-green/10 to-organic-green/5 border-organic-green/20">
                     <h3 className="font-semibold text-organic-green mb-3">About {category.name}</h3>
                     <p className="text-earth-brown mb-3">{category.description}</p>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-earth-brown">Average Rating:</span>
-                      <span className="font-semibold text-organic-green flex items-center">
-                        {category.avgRating}
-                        <Star className="w-4 h-4 ml-1 fill-golden-honey text-golden-honey" />
-                      </span>
-                    </div>
+
                   </Card>
                 )}
               </div>
@@ -559,13 +537,7 @@ export default function ProductDetailPage() {
                           {relatedProduct.description}
                         </p>
 
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-golden-honey text-golden-honey" />
-                            <span className="font-semibold text-organic-green text-sm">{relatedProduct.rating}</span>
-                          </div>
-                          <span className="text-earth-brown text-xs">({relatedProduct.reviews})</span>
-                        </div>
+
 
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-2">

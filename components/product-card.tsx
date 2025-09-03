@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Star, MessageCircle, ShoppingCart } from "lucide-react"
+import { MessageCircle, ShoppingCart } from "lucide-react"
 import Image from "next/image"
 import { useCart } from "@/lib/cart-context"
 import Link from "next/link"
@@ -82,13 +82,7 @@ export default function ProductCard({
               {product.description}
             </p>
 
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 fill-golden-honey text-golden-honey" />
-                <span className="font-semibold text-organic-green text-sm">{product.rating}</span>
-              </div>
-              <span className="text-earth-brown text-xs">({product.reviews} reviews)</span>
-            </div>
+
 
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">

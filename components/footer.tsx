@@ -36,40 +36,18 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="bg-organic-green text-white">
-      {/* Newsletter Section */}
-      <div className="border-b border-white/10">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto text-center">
-            <h3 className="text-2xl font-bold mb-4">Stay Updated with Organic Goodness</h3>
-            <p className="text-cream-white/90 mb-8 text-lg">
-              Subscribe to our newsletter for exclusive offers, organic tips, and product updates
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <Input
-                type="email"
-                placeholder="Enter your email address"
-                className="bg-white/10 border-white/20 text-white placeholder:text-cream-white/70 focus:border-golden-honey"
-              />
-              <Button className="bg-golden-honey hover:bg-golden-honey/90 text-organic-green font-semibold px-8 whitespace-nowrap">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-12 h-12 bg-golden-honey rounded-full flex items-center justify-center">
-                <Leaf className="w-7 h-7 text-organic-green" />
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-14 h-14 bg-golden-honey rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
+                <Leaf className="w-8 h-8 text-organic-green" />
               </div>
-              <div>
-                <span className="text-2xl font-bold font-playfair">Dhanya Global</span>
-                <div className="text-golden-honey text-sm -mt-1">Organic Excellence</div>
+              <div className="flex flex-col">
+                <span className="text-3xl font-bold font-playfair text-white leading-tight">Dhanya Global</span>
+                <div className="text-golden-honey text-base font-medium">Organic Excellence</div>
               </div>
             </div>
 
@@ -77,21 +55,6 @@ export function Footer() {
               Your trusted partner for premium organic products. We bring you nature's finest offerings with
               uncompromising quality and authenticity.
             </p>
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-golden-honey flex-shrink-0" />
-                <span className="text-cream-white/90">Bangalore, Karnataka, India</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-golden-honey flex-shrink-0" />
-                <span className="text-cream-white/90">+91 98765 43210</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-golden-honey flex-shrink-0" />
-                <span className="text-cream-white/90">info@dhanyaglobal.com</span>
-              </div>
-            </div>
           </div>
 
           {/* Products */}
@@ -128,44 +91,23 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-6 text-golden-honey">Support</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-cream-white/90 hover:text-golden-honey transition-colors duration-300"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* WhatsApp CTA */}
-        <div className="mt-12 p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <h4 className="text-xl font-semibold mb-2">Need Help? Contact Us on WhatsApp</h4>
-              <p className="text-cream-white/90">Get instant support and product information</p>
+            <h4 className="text-lg font-semibold mb-6 text-golden-honey">Contact</h4>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-golden-honey flex-shrink-0" />
+                <span className="text-cream-white/90">Bangalore, Karnataka, India</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-golden-honey flex-shrink-0" />
+                <span className="text-cream-white/90">+91 98765 43210</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-golden-honey flex-shrink-0" />
+                <span className="text-cream-white/90">info@dhanyaglobal.com</span>
+              </div>
             </div>
-            <Button
-              size="lg"
-              className="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
-              onClick={() =>
-                window.open(
-                  "https://wa.me/919876543210?text=Hi! I would like to know more about your organic products.",
-                  "_blank",
-                )
-              }
-            >
-              <MessageCircle className="w-5 h-5 mr-2" />
-              Chat on WhatsApp
-            </Button>
           </div>
         </div>
       </div>

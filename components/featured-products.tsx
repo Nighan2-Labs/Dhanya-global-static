@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Star, MessageCircle } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { getProducts } from "@/lib/firebase-products"
 import { ProductDetail } from "@/lib/types"
@@ -124,13 +124,7 @@ export function FeaturedProducts() {
 
                   <p className="text-earth-brown mb-4 text-sm leading-relaxed">{product.description}</p>
 
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-golden-honey text-golden-honey" />
-                      <span className="font-semibold text-organic-green">{product.rating}</span>
-                    </div>
-                    <span className="text-earth-brown text-sm">({product.reviews} reviews)</span>
-                  </div>
+
 
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-2">

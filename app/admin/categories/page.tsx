@@ -32,7 +32,7 @@ export default function AdminCategories() {
   const [filteredCategories, setFilteredCategories] = useState<(CategoryData[string] & { id: string, slug: string })[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<'name' | 'products' | 'rating'>('name')
+  const [sortBy, setSortBy] = useState<'name' | 'products'>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -63,10 +63,6 @@ export default function AdminCategories() {
     } else if (sortBy === 'products') {
       const av = a.productCount || 0
       const bv = b.productCount || 0
-      cmp = av - bv
-    } else if (sortBy === 'rating') {
-      const av = a.avgRating || 0
-      const bv = b.avgRating || 0
       cmp = av - bv
     }
     return sortOrder === 'asc' ? cmp : -cmp
@@ -157,7 +153,6 @@ export default function AdminCategories() {
                 <SelectContent>
                   <SelectItem value="name">Name</SelectItem>
                   <SelectItem value="products">Products</SelectItem>
-                  <SelectItem value="rating">Rating</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as any)}>
@@ -187,7 +182,6 @@ export default function AdminCategories() {
               <TableRow>
                 <TableHead>Category</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead>Rating</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -204,9 +198,6 @@ export default function AdminCategories() {
                   </TableCell>
                   <TableCell>
                     <div className="line-clamp-2">{category.description}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-medium">{category.avgRating || 0}</div>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
